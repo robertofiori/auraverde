@@ -24,7 +24,7 @@ export default function MainLayout() {
       <aside className="hidden md:flex flex-col w-64 border-r border-gray-200 dark:border-gray-800 bg-surface-light dark:bg-background-dark p-6 sticky top-0 h-screen">
         <div className="flex flex-col items-center -mt-2 mb-10 px-2 w-full">
           <div className="w-40 h-40 flex items-center justify-center">
-            <img src="/logolocal.svg" alt="AuraVerde Logo" className="w-full h-full object-contain" />
+            <img src={`${import.meta.env.BASE_URL}logolocal.svg`} alt="AuraVerde Logo" className="w-full h-full object-contain" />
           </div>
           <h1 className="font-varela text-3xl text-primary font-bold tracking-wide -mt-6 text-center w-full leading-none">
             AURA VERDE
