@@ -12,7 +12,7 @@ import Success from './pages/Success';
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <CartProvider>
         <Routes>
           <Route element={<MainLayout />}>
