@@ -19,6 +19,15 @@ export default {
         "varela": ["Varela Round", "sans-serif"]
       },
       borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        }
+      },
+      animation: {
+        'float': 'float 3s ease-in-out infinite',
+      }
     },
   },
   plugins: [],

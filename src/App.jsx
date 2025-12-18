@@ -12,7 +12,8 @@ import Success from './pages/Success';
 
 function App() {
   return (
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
+    // CAMBIO IMPORTANTE: Escribimos explícitamente '/auraverde' para asegurar que coincida con tu repo
+    <BrowserRouter basename="/auraverde">
       <CartProvider>
         <Routes>
           <Route element={<MainLayout />}>
