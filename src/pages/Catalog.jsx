@@ -2,13 +2,17 @@ import { useState } from 'react';
 import Header from '../components/Header';
 import ProductCard from '../components/ProductCard';
 import FilterChip from '../components/FilterChip';
-import { products, filters } from '../data/products';
+import { filters } from '../data/products';
 import { useCart } from '../context/CartContext';
+import { useProducts } from '../hooks/useProducts';
 
 export default function Catalog() {
   const [activeFilter, setActiveFilter] = useState("Todos");
   const [searchTerm, setSearchTerm] = useState("");
   const { addToCart } = useCart();
+  const { products, loading, error } = useProducts();
+
+  // Show loading state wrapper or just handle it conditionally
 
   const filteredProducts = products.filter(p => {
     const matchesFilter = activeFilter === "Todos" || p.type.includes(activeFilter) || p.name.includes(activeFilter);
@@ -16,6 +20,14 @@ export default function Catalog() {
       p.type.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesFilter && matchesSearch;
   });
+
+  if (loading) {
+    return <div className="flex h-full items-center justify-center text-primary font-bold">Cargando catálogo...</div>;
+  }
+
+  if (error) {
+    return <div className="flex h-full items-center justify-center text-red-500">Error cargando productos.</div>;
+  }
 
   return (
     <div className="flex flex-col h-full">
@@ -64,7 +76,7 @@ export default function Catalog() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-8 md:gap-6">
           {filteredProducts.map((product) => (
             <ProductCard
-              key={product.id}
+              key={product.firestoreId || product.id}
               {...product}
               onAddToCart={() => addToCart(product)}
             />

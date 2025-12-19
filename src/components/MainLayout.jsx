@@ -1,9 +1,11 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import BottomNav from './BottomNav';
+import { useAuth } from '../context/AuthContext';
 
 export default function MainLayout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { currentUser, userRole, logout } = useAuth();
 
   const navItems = [
     { icon: "home", label: "Inicio", path: "/catalog" },
@@ -51,11 +53,35 @@ export default function MainLayout() {
           ))}
         </nav>
 
-        <div className="mt-auto pt-6 border-t border-gray-200 dark:border-gray-800">
-          <button className="flex items-center gap-3 p-3 rounded-xl w-full text-text-secondary dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-            <span className="material-symbols-outlined">logout</span>
-            <span className="font-medium text-sm">Cerrar Sesión</span>
-          </button>
+        <div className="mt-auto pt-6 border-t border-gray-200 dark:border-gray-800 flex flex-col gap-2">
+          {currentUser ? (
+            <>
+              {userRole === 'admin' && (
+                <button
+                  onClick={() => navigate('/admin')}
+                  className="flex items-center gap-3 p-3 rounded-xl w-full text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
+                >
+                  <span className="material-symbols-outlined">admin_panel_settings</span>
+                  <span className="font-medium text-sm">Panel Admin</span>
+                </button>
+              )}
+              <button
+                onClick={logout}
+                className="flex items-center gap-3 p-3 rounded-xl w-full text-text-secondary dark:text-gray-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-500 transition-colors"
+              >
+                <span className="material-symbols-outlined">logout</span>
+                <span className="font-medium text-sm">Cerrar Sesión</span>
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => navigate('/login')}
+              className="flex items-center gap-3 p-3 rounded-xl w-full text-primary hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
+            >
+              <span className="material-symbols-outlined">login</span>
+              <span className="font-medium text-sm">Iniciar Sesión</span>
+            </button>
+          )}
         </div>
       </aside>
 

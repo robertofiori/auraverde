@@ -1,17 +1,20 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { useCart } from '../context/CartContext';
-import { products } from '../data/products';
+import { useProduct } from '../hooks/useProducts';
 
 export default function ProductDetail() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
+  const { product, loading, error } = useProduct(id);
 
-  const product = products.find(p => p.id === parseInt(id));
+  if (loading) {
+    return <div className="flex h-screen items-center justify-center text-primary font-bold">Cargando producto...</div>;
+  }
 
-  if (!product) {
+  if (error || !product) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
         <h2 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white">Producto no encontrado</h2>

@@ -1,13 +1,15 @@
 import { useNavigate } from 'react-router-dom';
-import { products } from '../data/products';
+import { useProducts } from '../hooks/useProducts';
 import ProductCard from '../components/ProductCard';
 import { useCart } from '../context/CartContext';
 
 export default function Home() {
     const navigate = useNavigate();
     const { addToCart } = useCart();
+    // Get products independently or pass from a parent context if we wanted to optimize
+    const { products, loading } = useProducts();
 
-    // Get first 4 products for featured section
+    // Get first 4 products for featured section (once loaded)
     const featuredProducts = products.slice(0, 4);
 
     return (
@@ -77,7 +79,7 @@ export default function Home() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-8 md:gap-6">
                     {featuredProducts.map((product) => (
                         <ProductCard
-                            key={product.id}
+                            key={product.firestoreId || product.id}
                             {...product}
                             onAddToCart={() => addToCart(product)}
                         />
