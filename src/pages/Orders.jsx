@@ -1,27 +1,9 @@
 import { useNavigate } from 'react-router-dom';
+import { useOrders } from '../hooks/useOrders';
 
 export default function Orders() {
     const navigate = useNavigate();
-
-    // Mock Data for Orders
-    const orders = [
-        {
-            id: "ORD-2024-001",
-            date: "Oct 24, 2024",
-            status: "Delivered",
-            total: 45.00,
-            items: ["Echeveria Lola", "Aloe Vera"],
-            image: "https://lh3.googleusercontent.com/aida-public/AB6AXuA0eZ15aq4T37Ryj4bDgj81ZEUyIYsh_RKRe_i8s-gujmUO-i27DiYWUuBzPiPJ_YWIS2p_w47QKZMKDQWOHo6CRndOci24Fq8e8I8K-sMCpajjkdksObyDBwAwTd51gu_8U6d9MPdleEc-8Hnb1zzYYCFR_l_Ypk_iSruncVz3mVHzQopMI-9CTT8lKOVIlGLTyDkJF-HpDQXMvf6jWJpWFFQWuC4q3TuYCE1oQ49Fy4VkatuhBcPfA-InsniE7TV93a8vHXmlmM7L"
-        },
-        {
-            id: "ORD-2024-002",
-            date: "Nov 12, 2024",
-            status: "Processing",
-            total: 30.00,
-            items: ["Bonsai Ficus"],
-            image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBuQ1GGR9x_WTdo-L0S5BynKVM9VNi2KLnWCv4u1BHbfC0ie4CsUb1AH_2sDOTV1EIOAyydQTq86WSJXuVqYbuIctNrkOoDPfqY4-2WVg-VcVGxkgXgLhCeSe8AOSMdCpdWYBwJDeS9tU9OxFtysrT5GG8kDBiTbp9WeJrIwpzQIw9DsA28HoOQo78lMm95heiSA-aLd_HzAeO8wCyPlJKyYrXEE-tXalpUWPPAj2mSTuWxxzkmW5tkBvw7RQdWDU6lyq_4RCuJpbGA"
-        }
-    ];
+    const { orders, loading, error } = useOrders();
 
     return (
         <div className="relative flex h-full min-h-screen w-full flex-col bg-background-light dark:bg-background-dark">
@@ -34,28 +16,58 @@ export default function Orders() {
                 >
                     <span className="material-symbols-outlined text-text-main dark:text-white">arrow_back</span>
                 </button>
-                <h1 className="text-xl font-bold text-slate-900 dark:text-white">My Orders</h1>
+                <h1 className="text-xl font-bold text-slate-900 dark:text-white">Mis Pedidos</h1>
             </div>
 
             <div className="flex-1 p-4 max-w-3xl mx-auto w-full">
+
+                {loading && (
+                    <div className="mt-10 flex justify-center text-primary">
+                        <span className="material-symbols-outlined animate-spin text-4xl">progress_activity</span>
+                    </div>
+                )}
+
+                {!loading && orders.length === 0 && (
+                    <div className="flex flex-col items-center justify-center py-12 px-8 text-center bg-white dark:bg-surface-dark rounded-2xl shadow-sm">
+                        <span className="material-symbols-outlined text-6xl text-emerald-200 dark:text-emerald-900/40 mb-4">local_shipping</span>
+                        <h3 className="text-lg font-bold text-slate-900 dark:text-white">Sin pedidos aún</h3>
+                        <p className="text-slate-500 dark:text-slate-400 mt-1 mb-6">Tu historial está vacío. ¡Es hora de llenar el jardín!</p>
+                        <button onClick={() => navigate('/catalog')} className="px-6 py-2 bg-primary text-white rounded-xl font-bold hover:bg-emerald-600 transition-colors">
+                            Ir al Catálogo
+                        </button>
+                    </div>
+                )}
+
                 <div className="flex flex-col gap-4">
                     {orders.map((order) => (
                         <div key={order.id} className="bg-white dark:bg-surface-dark rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-white/5 flex gap-4">
-                            <div className="size-20 bg-gray-100 rounded-xl bg-center bg-cover shrink-0" style={{ backgroundImage: `url(${order.image})` }}></div>
+                            {/* Use first item image or placeholder */}
+                            <div className="size-20 bg-gray-100 rounded-xl bg-center bg-cover shrink-0"
+                                style={{ backgroundImage: `url(${order.items?.[0]?.image || 'https://via.placeholder.com/150'})` }}>
+                                {order.items?.length > 1 && (
+                                    <div className="flex items-center justify-center h-full w-full bg-black/40 text-white font-bold rounded-xl backdrop-blur-sm">
+                                        +{order.items.length - 1}
+                                    </div>
+                                )}
+                            </div>
+
                             <div className="flex-1 flex flex-col justify-center">
                                 <div className="flex justify-between items-start mb-1">
-                                    <h3 className="font-bold text-slate-900 dark:text-white">{order.id}</h3>
-                                    <span className={`text-xs font-bold px-2 py-1 rounded-full ${order.status === 'Delivered'
-                                            ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                                            : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                                    <h3 className="font-bold text-slate-900 dark:text-white text-xs md:text-sm uppercase tracking-wider text-slate-500">
+                                        ID: {order.id.slice(0, 8)}...
+                                    </h3>
+                                    <span className={`text-[10px] font-bold px-2 py-1 rounded-full uppercase ${order.status === 'Delivered' ? 'bg-green-100 text-green-700' :
+                                            order.status === 'Processing' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'
                                         }`}>
                                         {order.status}
                                     </span>
                                 </div>
-                                <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">{order.items.join(", ")}</p>
+                                <p className="text-sm font-bold text-slate-900 dark:text-white mb-1">
+                                    {order.items?.[0]?.name} {order.items?.length > 1 ? `y ${order.items.length - 1} más` : ''}
+                                </p>
                                 <div className="flex justify-between items-center mt-auto">
-                                    <span className="text-xs text-slate-400">{order.date}</span>
-                                    <span className="font-bold text-slate-900 dark:text-white">${order.total.toFixed(2)}</span>
+                                    <span className="text-xs text-slate-400">{order.dateStr}</span>
+                                    <span className="font-bold text-primary">${order.total?.toFixed(2)}</span>
                                 </div>
                             </div>
                         </div>

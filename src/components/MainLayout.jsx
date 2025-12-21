@@ -1,4 +1,4 @@
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, Link } from 'react-router-dom';
 import BottomNav from './BottomNav';
 import { useAuth } from '../context/AuthContext';
 
@@ -25,9 +25,9 @@ export default function MainLayout() {
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex flex-col w-64 border-r border-gray-200 dark:border-gray-800 bg-surface-light dark:bg-background-dark p-6 sticky top-0 h-screen">
         <div className="flex flex-col items-center -mt-2 mb-10 px-2 w-full">
-          <div className="w-40 h-40 flex items-center justify-center">
+          <Link to="/" className="w-40 h-40 flex items-center justify-center mb-2 transition-transform duration-300 hover:scale-105 active:scale-95 active:rotate-3 cursor-pointer">
             <img src={`${import.meta.env.BASE_URL}logolocal.svg`} alt="AuraVerde Logo" className="w-full h-full object-contain animate-float" />
-          </div>
+          </Link>
           <h1 className="font-varela text-3xl text-primary font-bold tracking-wide -mt-6 text-center w-full leading-none">
             AURA VERDE
           </h1>

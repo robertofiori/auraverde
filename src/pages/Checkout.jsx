@@ -1,25 +1,74 @@
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { useState, useEffect } from 'react';
+import { useOrders } from '../hooks/useOrders';
+import { useAddresses } from '../hooks/useAddresses';
+import MercadoPagoCheckout from '../components/MercadoPagoCheckout';
 
 export default function Checkout() {
     const navigate = useNavigate();
-    const { cartItems, total, subtotal, tax } = useCart();
+    const { cartItems, total, subtotal, tax, clearCart } = useCart();
+    const { createOrder } = useOrders();
+    const { currentUser } = useAuth();
+    const { addresses } = useAddresses();
     const [isProcessing, setIsProcessing] = useState(false);
 
-    const handleSubmit = (e) => {
+    useEffect(() => {
+        if (!currentUser) navigate('/login');
+    }, [currentUser, navigate]);
+
+    // Form State
+    const [formData, setFormData] = useState({
+        firstName: '', lastName: '', address: '', city: '', zip: ''
+    });
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        if (cartItems.length === 0) return;
+
         setIsProcessing(true);
-        // Simulate API call
-        setTimeout(() => {
-            setIsProcessing(false);
+
+        try {
+            // Simulate Payment Delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
+
+            const orderData = {
+                items: cartItems,
+                subtotal,
+                tax,
+                total,
+                shippingAddress: {
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                    address: formData.address,
+                    city: formData.city,
+                    zip: formData.zip
+                },
+                paymentLast4: 'MercadoPago',
+                status: 'pending_payment',
+                date: new Date().toLocaleDateString() // Fallback string
+            };
+
+            await createOrder(orderData);
+            clearCart();
             navigate('/success');
-        }, 2000);
+        } catch (error) {
+            console.error("Checkout failed", error);
+            alert("Error: " + error.message);
+        } finally {
+            setIsProcessing(false);
+        }
     };
 
     if (cartItems.length === 0) {
-        navigate('/catalog');
-        return null;
+        // Allow rendering strictly for transition, but usually redirect
+        // We'll keep the return null pattern or redirect effect
     }
 
     return (
@@ -45,33 +94,49 @@ export default function Checkout() {
                             <span className="material-symbols-outlined text-primary">local_shipping</span>
                             Dirección de Envío
                         </h2>
+
+                        {/* Saved Addresses Selector */}
+                        {addresses.length > 0 && (
+                            <div className="mb-6">
+                                <p className="text-sm text-slate-500 dark:text-gray-400 mb-3 font-medium">Usar una dirección guardada:</p>
+                                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                                    {addresses.map(addr => (
+                                        <button
+                                            key={addr.id}
+                                            type="button"
+                                            onClick={() => setFormData(prev => ({ ...prev, firstName: addr.firstName || '', lastName: addr.lastName || '', address: addr.address || '', city: addr.city || '', zip: addr.zip || '' }))}
+                                            className="flex items-center gap-2 px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl hover:border-primary hover:bg-primary/5 transition-colors whitespace-nowrap"
+                                        >
+                                            <span className="material-symbols-outlined text-primary text-sm">home</span>
+                                            <span className="text-sm font-bold text-slate-700 dark:text-slate-300">{addr.alias}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
                         <form id="checkout-form" onSubmit={handleSubmit} className="flex flex-col gap-4">
                             <div className="grid grid-cols-2 gap-4">
-                                <input required type="text" placeholder="Nombre" className="w-full bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-primary/50 text-slate-900 dark:text-white" />
-                                <input required type="text" placeholder="Apellido" className="w-full bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-primary/50 text-slate-900 dark:text-white" />
+                                <input name="firstName" value={formData.firstName} onChange={handleInputChange} required type="text" placeholder="Nombre" className="w-full bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-primary/50 text-slate-900 dark:text-white" />
+                                <input name="lastName" value={formData.lastName} onChange={handleInputChange} required type="text" placeholder="Apellido" className="w-full bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-primary/50 text-slate-900 dark:text-white" />
                             </div>
-                            <input required type="text" placeholder="Dirección" className="w-full bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-primary/50 text-slate-900 dark:text-white" />
+                            <input name="address" value={formData.address} onChange={handleInputChange} required type="text" placeholder="Dirección" className="w-full bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-primary/50 text-slate-900 dark:text-white" />
                             <div className="grid grid-cols-2 gap-4">
-                                <input required type="text" placeholder="Ciudad" className="w-full bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-primary/50 text-slate-900 dark:text-white" />
-                                <input required type="text" placeholder="Código Postal" className="w-full bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-primary/50 text-slate-900 dark:text-white" />
+                                <input name="city" value={formData.city} onChange={handleInputChange} required type="text" placeholder="Ciudad" className="w-full bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-primary/50 text-slate-900 dark:text-white" />
+                                <input name="zip" value={formData.zip} onChange={handleInputChange} required type="text" placeholder="Código Postal" className="w-full bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-primary/50 text-slate-900 dark:text-white" />
                             </div>
                         </form>
                     </div>
 
-                    {/* Payment Info */}
+                    {/* Payment Info - REMOVED for MercadoPago Integration
                     <div className="bg-white dark:bg-surface-dark p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-white/5">
                         <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                             <span className="material-symbols-outlined text-primary">credit_card</span>
                             Método de Pago
                         </h2>
-                        <div className="flex flex-col gap-4">
-                            <input required form="checkout-form" type="text" placeholder="Número de Tarjeta" className="w-full bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-primary/50 text-slate-900 dark:text-white" />
-                            <div className="grid grid-cols-2 gap-4">
-                                <input required form="checkout-form" type="text" placeholder="MM/YY" className="w-full bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-primary/50 text-slate-900 dark:text-white" />
-                                <input required form="checkout-form" type="text" placeholder="CVV" className="w-full bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-primary/50 text-slate-900 dark:text-white" />
-                            </div>
-                        </div>
+                        ...
                     </div>
+                    */}
                 </div>
 
                 {/* Right Col: Order Summary */}
@@ -113,22 +178,21 @@ export default function Checkout() {
                             </div>
                         </div>
 
-                        <button
-                            form="checkout-form"
-                            disabled={isProcessing}
-                            className="w-full mt-6 py-4 bg-primary hover:bg-emerald-600 disabled:opacity-70 disabled:cursor-not-allowed text-white font-bold rounded-xl shadow-lg shadow-emerald-500/30 transition-all flex items-center justify-center gap-2"
-                        >
-                            {isProcessing ? (
-                                <>
-                                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
-                                    Procesando...
-                                </>
+                        {/* Payment Action */}
+                        <div className="mt-6">
+                            {!isProcessing ? (
+                                <button
+                                    form="checkout-form"
+                                    type="submit"
+                                    className="w-full py-4 bg-primary hover:bg-emerald-600 text-white font-bold rounded-xl shadow-lg shadow-emerald-500/30 transition-all flex items-center justify-center gap-2"
+                                >
+                                    Confirmar Datos y Pagar
+                                </button>
                             ) : (
-                                <>
-                                    Pagar Ahora <span className="material-symbols-outlined text-[20px]">lock</span>
-                                </>
+                                // Once form is submitted and order created, show MP Button
+                                <MercadoPagoCheckout orderId="temp-order-id" total={total} />
                             )}
-                        </button>
+                        </div>
                     </div>
                 </div>
             </div>

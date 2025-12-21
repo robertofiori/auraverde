@@ -3,6 +3,8 @@ import { useProducts } from '../hooks/useProducts';
 import ProductCard from '../components/ProductCard';
 import { useCart } from '../context/CartContext';
 
+import Header from '../components/Header';
+
 export default function Home() {
     const navigate = useNavigate();
     const { addToCart } = useCart();
@@ -14,6 +16,9 @@ export default function Home() {
 
     return (
         <div className="flex flex-col min-h-screen">
+            <div className="md:hidden">
+                <Header title="Inicio" showSearch={false} />
+            </div>
             {/* Hero Section */}
             <section className="relative h-[500px] w-full bg-surface-light dark:bg-surface-dark overflow-hidden flex items-center justify-center text-center px-4">
                 {/* Background Image/Gradient Decor */}

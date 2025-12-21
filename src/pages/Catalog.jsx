@@ -7,6 +7,7 @@ import { useCart } from '../context/CartContext';
 import { useProducts } from '../hooks/useProducts';
 
 export default function Catalog() {
+  // State for filtering and search
   const [activeFilter, setActiveFilter] = useState("Todos");
   const [searchTerm, setSearchTerm] = useState("");
   const { addToCart } = useCart();
@@ -32,7 +33,7 @@ export default function Catalog() {
   return (
     <div className="flex flex-col h-full">
       <div className="md:hidden">
-        <Header />
+        <Header onSearch={setSearchTerm} searchValue={searchTerm} />
       </div>
 
       <div className="hidden md:block mb-6">
@@ -40,20 +41,7 @@ export default function Catalog() {
         <p className="text-slate-500 text-lg">Encuentra la planta perfecta para tu espacio</p>
       </div>
 
-      <div className="px-6 md:px-0 mb-4">
-        <div className="relative">
-          <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">search</span>
-          <input
-            type="text"
-            placeholder="Buscar plantas..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 rounded-xl py-3 pl-12 pr-4 text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/50"
-          />
-        </div>
-      </div>
-
-      {/* Filters */}
+      {/* Filters (Search moved to Header) */}
       <div className="pl-6 py-4 shrink-0 md:pl-0">
         <div className="flex gap-3 overflow-x-auto hide-scrollbar pr-6 items-center">
           <button className="flex shrink-0 h-10 w-10 items-center justify-center rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-md transition-transform hover:scale-105">
@@ -78,6 +66,7 @@ export default function Catalog() {
             <ProductCard
               key={product.firestoreId || product.id}
               {...product}
+              id={product.firestoreId || product.id}
               onAddToCart={() => addToCart(product)}
             />
           ))}
