@@ -15,26 +15,25 @@ export default function MercadoPagoCheckout({ orderId, total }) {
     const createPreference = async () => {
         setIsLoading(true);
         try {
-            // BACKEND REQUIRED:
-            // Here you would normally fetch('https://your-backend.com/create_preference', ...)
-            // making a POST request with the order items.
-            // The backend uses the Access Token to talk to MP and returns the preferenceId.
-
+            // SIMULACIÓN DE BACKEND:
             console.log("Simulating backend call for Order:", orderId);
 
-            // MOCK DELAY
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            // MOCK DELAY (Simula tiempo de red)
+            await new Promise(resolve => setTimeout(resolve, 1500));
 
-            // Since we don't have a backend yet, we can't get a real ID to open the wallet.
-            // We will simulate a "success" flow for the prototype.
-            // In a real app, you would set setPreferenceId(data.id) here.
+            // Simular respuesta exitosa
+            // En un caso real, obtendríamos un preferenceId del backend.
+            // Aquí redirigimos directamente a nuestra página de éxito simulada.
 
-            // For Demo Only:
-            alert("En Modo Producción, esto abriría la billetera de MercadoPago.\n\nComo falta el Backend seguro, simularemos el pago exitoso.");
-            window.location.href = `/auraverde/success?collection_status=approved&external_reference=${orderId}`;
+            alert("Modo Simulación: Redirigiendo a página de éxito...");
+
+            // Redirigir a la página de éxito interna
+            // Nota: En producción real, esto sería window.location.href = data.init_point (URL de MercadoPago)
+            window.location.href = `/auraverde/success?collection_status=approved&external_reference=${orderId}&payment_type=simulated`;
 
         } catch (error) {
             console.error(error);
+            alert("Error en la simulación.");
         } finally {
             setIsLoading(false);
         }
