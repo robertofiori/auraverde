@@ -12,10 +12,15 @@ export default function Header({ title = "Catálogo", showSearch = true, onSearc
     <>
       <header className="flex items-center justify-between px-6 py-4 bg-background-light dark:bg-background-dark z-10 shrink-0">
         <div className="flex items-center gap-3">
-          <Link to="/" className="md:hidden h-10 w-10 flex items-center justify-center transition-transform duration-300 hover:scale-110 active:scale-90 active:rotate-12">
-            <img src={`${import.meta.env.BASE_URL}logolocal.svg`} alt="Logo" className="w-full h-full object-contain animate-float" />
+          <Link to="/" className="md:hidden flex flex-col items-center justify-center gap-0 group">
+            <div className="h-28 w-28 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-active:scale-95 group-active:rotate-3 -mb-3">
+              <img src={`${import.meta.env.BASE_URL}logolocal.svg`} alt="Logo" className="w-full h-full object-contain" />
+            </div>
+            <div className="flex items-center leading-none">
+              <span className="text-xl font-bold tracking-[0.1em] text-primary whitespace-nowrap">AURA VERDE</span>
+            </div>
           </Link>
-          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">{title}</h1>
+          <h1 className="hidden md:block text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">{title}</h1>
         </div>
         <div className="flex items-center gap-2 md:gap-4">
 

@@ -3,30 +3,23 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { useState, useEffect } from 'react';
 import { useOrders } from '../hooks/useOrders';
-import { useAddresses } from '../hooks/useAddresses';
+import { useAddresses } from '../hooks/useAddresses'; // kept for compilation, technically unused now
 import MercadoPagoCheckout from '../components/MercadoPagoCheckout';
 
 export default function Checkout() {
     const navigate = useNavigate();
     const { cartItems, total, subtotal, tax, clearCart } = useCart();
     const { createOrder } = useOrders();
-    const { currentUser } = useAuth();
-    const { addresses } = useAddresses();
+    const { currentUser, userData } = useAuth();
     const [isProcessing, setIsProcessing] = useState(false);
 
+    // Redirect if no shipping address
     useEffect(() => {
-        if (!currentUser) navigate('/login');
-    }, [currentUser, navigate]);
-
-    // Form State
-    const [formData, setFormData] = useState({
-        firstName: '', lastName: '', address: '', city: '', zip: ''
-    });
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
-    };
+        if (currentUser && userData && !userData.shippingAddress) {
+            alert("Para que podamos enviarte tu pedido necesitamos tu direccion");
+            navigate('/profile');
+        }
+    }, [currentUser, userData, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -43,13 +36,7 @@ export default function Checkout() {
                 subtotal,
                 tax,
                 total,
-                shippingAddress: {
-                    firstName: formData.firstName,
-                    lastName: formData.lastName,
-                    address: formData.address,
-                    city: formData.city,
-                    zip: formData.zip
-                },
+                shippingAddress: userData.shippingAddress, // Use profile address
                 paymentLast4: 'MercadoPago',
                 status: 'pending_payment',
                 date: new Date().toLocaleDateString() // Fallback string
@@ -89,43 +76,27 @@ export default function Checkout() {
                 {/* Left Col: Forms */}
                 <div className="flex flex-col gap-6">
                     {/* Shipping Info */}
+                    {/* Shipping Info - Read Only */}
                     <div className="bg-white dark:bg-surface-dark p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-white/5">
                         <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                             <span className="material-symbols-outlined text-primary">local_shipping</span>
                             Dirección de Envío
                         </h2>
 
-                        {/* Saved Addresses Selector */}
-                        {addresses.length > 0 && (
-                            <div className="mb-6">
-                                <p className="text-sm text-slate-500 dark:text-gray-400 mb-3 font-medium">Usar una dirección guardada:</p>
-                                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-                                    {addresses.map(addr => (
-                                        <button
-                                            key={addr.id}
-                                            type="button"
-                                            onClick={() => setFormData(prev => ({ ...prev, firstName: addr.firstName || '', lastName: addr.lastName || '', address: addr.address || '', city: addr.city || '', zip: addr.zip || '' }))}
-                                            className="flex items-center gap-2 px-4 py-2 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl hover:border-primary hover:bg-primary/5 transition-colors whitespace-nowrap"
-                                        >
-                                            <span className="material-symbols-outlined text-primary text-sm">home</span>
-                                            <span className="text-sm font-bold text-slate-700 dark:text-slate-300">{addr.alias}</span>
-                                        </button>
-                                    ))}
-                                </div>
+                        <div className="bg-gray-50 dark:bg-white/5 p-4 rounded-xl border border-gray-100 dark:border-white/5 flex items-start gap-3">
+                            <span className="material-symbols-outlined text-primary mt-0.5">location_on</span>
+                            <div>
+                                <p className="font-bold text-slate-900 dark:text-white text-base">{userData?.displayName || 'Usuario'}</p>
+                                <p className="text-slate-600 dark:text-gray-300 text-sm mt-1">{userData?.shippingAddress?.address}</p>
+                                <p className="text-slate-500 dark:text-gray-400 text-sm">{userData?.shippingAddress?.city}, {userData?.shippingAddress?.zip}</p>
                             </div>
-                        )}
+                        </div>
 
-                        <form id="checkout-form" onSubmit={handleSubmit} className="flex flex-col gap-4">
-                            <div className="grid grid-cols-2 gap-4">
-                                <input name="firstName" value={formData.firstName} onChange={handleInputChange} required type="text" placeholder="Nombre" className="w-full bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-primary/50 text-slate-900 dark:text-white" />
-                                <input name="lastName" value={formData.lastName} onChange={handleInputChange} required type="text" placeholder="Apellido" className="w-full bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-primary/50 text-slate-900 dark:text-white" />
-                            </div>
-                            <input name="address" value={formData.address} onChange={handleInputChange} required type="text" placeholder="Dirección" className="w-full bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-primary/50 text-slate-900 dark:text-white" />
-                            <div className="grid grid-cols-2 gap-4">
-                                <input name="city" value={formData.city} onChange={handleInputChange} required type="text" placeholder="Ciudad" className="w-full bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-primary/50 text-slate-900 dark:text-white" />
-                                <input name="zip" value={formData.zip} onChange={handleInputChange} required type="text" placeholder="Código Postal" className="w-full bg-background-light dark:bg-background-dark border border-gray-200 dark:border-white/10 rounded-xl px-4 py-3 outline-none focus:ring-2 ring-primary/50 text-slate-900 dark:text-white" />
-                            </div>
-                        </form>
+                        <div className="mt-4 flex justify-end">
+                            <button onClick={() => navigate('/profile')} className="text-primary text-sm font-bold hover:underline">
+                                Editar en Perfil
+                            </button>
+                        </div>
                     </div>
 
                     {/* Payment Info - REMOVED for MercadoPago Integration
@@ -163,10 +134,7 @@ export default function Checkout() {
                                 <span>Subtotal</span>
                                 <span>${subtotal.toFixed(2)}</span>
                             </div>
-                            <div className="flex justify-between text-slate-500 dark:text-gray-400">
-                                <span>Impuestos (7%)</span>
-                                <span>${tax.toFixed(2)}</span>
-                            </div>
+
                             <div className="flex justify-between text-slate-500 dark:text-gray-400">
                                 <span>Envío</span>
                                 <span className="text-green-500 font-bold">Gratis</span>
@@ -182,7 +150,7 @@ export default function Checkout() {
                         <div className="mt-6">
                             {!isProcessing ? (
                                 <button
-                                    form="checkout-form"
+                                    onClick={handleSubmit}
                                     type="submit"
                                     className="w-full py-4 bg-primary hover:bg-emerald-600 text-white font-bold rounded-xl shadow-lg shadow-emerald-500/30 transition-all flex items-center justify-center gap-2"
                                 >

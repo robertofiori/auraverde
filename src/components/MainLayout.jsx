@@ -1,6 +1,8 @@
 import { Outlet, useLocation, useNavigate, Link } from 'react-router-dom';
 import BottomNav from './BottomNav';
 import { useAuth } from '../context/AuthContext';
+import SocialLinks from './SocialLinks';
+import ThemeToggle from './ThemeToggle';
 
 export default function MainLayout() {
   const location = useLocation();
@@ -33,6 +35,7 @@ export default function MainLayout() {
           </h1>
 
         </div>
+
 
         <nav className="flex flex-col gap-2 flex-1">
           {navItems.map((item) => (
@@ -82,6 +85,11 @@ export default function MainLayout() {
               <span className="font-medium text-sm">Iniciar Sesión</span>
             </button>
           )}
+
+          <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 flex items-center justify-center gap-6 w-full">
+            <ThemeToggle />
+            <SocialLinks />
+          </div>
         </div>
       </aside>
 

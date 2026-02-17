@@ -17,37 +17,38 @@ import Migration from './pages/Migration';
 import AdminProducts from './pages/AdminProducts';
 
 import { AuthProvider } from './context/AuthContext';
-
 import { ThemeProvider } from './context/ThemeContext';
+import { ToastProvider } from './context/ToastContext';
 
 function App() {
   return (
-    // CAMBIO IMPORTANTE: Escribimos explícitamente '/auraverde' para asegurar que coincida con tu repo
-    <BrowserRouter basename="/auraverde">
-      <ThemeProvider>
-        <AuthProvider>
-          <CartProvider>
-            <Routes>
-              <Route element={<MainLayout />}>
-                <Route path="/" element={<Home />} />
-                <Route path="/catalog" element={<Catalog />} />
-                <Route path="/product/:id" element={<ProductDetail />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/orders" element={<Orders />} />
-                <Route path="/addresses" element={<Addresses />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/success" element={<Success />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/migrate" element={<Migration />} />
-                <Route path="/favorites" element={<Favorites />} />
-                <Route path="/admin" element={<AdminProducts />} />
-              </Route>
-            </Routes>
-          </CartProvider>
-        </AuthProvider>
-      </ThemeProvider>
+    <BrowserRouter>
+      <ToastProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <CartProvider>
+              <Routes>
+                <Route element={<MainLayout />}>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/catalog" element={<Catalog />} />
+                  <Route path="/product/:id" element={<ProductDetail />} />
+                  <Route path="/cart" element={<Cart />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/orders" element={<Orders />} />
+                  <Route path="/addresses" element={<Addresses />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/success" element={<Success />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/migrate" element={<Migration />} />
+                  <Route path="/favorites" element={<Favorites />} />
+                  <Route path="/admin" element={<AdminProducts />} />
+                </Route>
+              </Routes>
+            </CartProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </ToastProvider>
     </BrowserRouter>
   );
 }

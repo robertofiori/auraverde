@@ -16,7 +16,7 @@ export default function BottomNav() {
 
         <Link to="/catalog" className={`flex flex-col items-center gap-1 transition-colors group ${isActive('/catalog') ? 'text-primary relative' : 'text-slate-400 dark:text-slate-500 hover:text-primary'}`}>
           {isActive('/catalog') && <div className="absolute -top-10 bg-primary/20 rounded-full w-12 h-12 flex items-center justify-center blur-lg opacity-50"></div>}
-          <span className={`material-symbols-outlined text-3xl ${isActive('/catalog') ? 'fill-current' : 'group-hover:scale-110 transition-transform'}`}>grid_view</span>
+          <span className={`material-symbols-outlined text-3xl ${isActive('/catalog') ? 'fill-current' : 'group-hover:scale-110 transition-transform'}`}>search</span>
         </Link>
 
         <Link to="/favorites" className={`flex flex-col items-center gap-1 transition-colors group ${isActive('/favorites') ? 'text-primary relative' : 'text-slate-400 dark:text-slate-500 hover:text-primary'}`}>

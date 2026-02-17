@@ -1,11 +1,50 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useToast } from '../context/ToastContext';
 import { useCart } from '../context/CartContext';
+import { useAddresses } from '../hooks/useAddresses';
+import { calculateShippingCost } from '../utils/shipping';
+import { useAuth } from '../context/AuthContext';
 
 export default function Cart() {
   const navigate = useNavigate();
-  const { cartItems, removeFromCart, updateQuantity, subtotal, tax, total } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, subtotal, total, shippingCost, setShippingCost, selectedAddress, setSelectedAddress } = useCart();
+  const { addresses, addAddress, loading: loadingAddresses } = useAddresses();
+  const { currentUser, userData } = useAuth();
+  const [isCalculating, setIsCalculating] = useState(false);
+  const { showToast } = useToast();
 
+  const hasValidAddress = userData?.shippingAddress?.address && userData?.shippingAddress?.city;
+  /* Effect to calculate shipping when userData loads */
   const itemCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
+  /* Effect to calculate shipping when userData loads */
+  useEffect(() => {
+    if (currentUser && userData?.shippingAddress) {
+      // Auto-select and calculate
+      const address = userData.shippingAddress;
+
+      const calculate = async () => {
+        setIsCalculating(true);
+        try {
+          const fullAddress = `${address.address}, ${address.city}, ${address.zip}`;
+          // Pass item count for free shipping logic
+          const cost = await calculateShippingCost(fullAddress, itemCount);
+          setShippingCost(cost);
+          setSelectedAddress(address);
+        } catch (error) {
+          console.error("Error calculating shipping:", error);
+          setShippingCost(0);
+        } finally {
+          setIsCalculating(false);
+        }
+      };
+      calculate();
+    } else {
+      setShippingCost(0);
+      setSelectedAddress(null);
+    }
+  }, [currentUser, userData, itemCount]); // Recalculate when items change
 
   return (
     <div className="relative flex h-full min-h-screen w-full flex-col overflow-hidden pb-32 bg-background-light dark:bg-background-dark md:pb-0">
@@ -96,6 +135,48 @@ export default function Cart() {
           ">
             <div className="flex flex-col gap-4 max-w-md mx-auto w-full">
 
+              {/* Shipping & Address Selection */}
+              <div className="flex flex-col gap-4 border-b border-gray-200 dark:border-gray-700 pb-4">
+                <h3 className="font-bold text-slate-900 dark:text-white">Envío</h3>
+
+                {!currentUser ? (
+                  <div className="text-sm text-amber-600 bg-amber-50 p-3 rounded-lg">
+                    Inicia sesión para gestionar tu dirección y calcular el envío.
+                  </div>
+                ) : (
+                  <>
+                    {/* Single Address Display */}
+                    {hasValidAddress ? (
+                      <div className="flex items-start justify-between gap-3 p-3 rounded-xl border border-primary bg-primary/5">
+                        <div className="text-sm">
+                          <p className="font-bold text-slate-900 dark:text-white">Dirección de Envío</p>
+                          <p className="text-slate-500">
+                            {userData.shippingAddress.address}, {userData.shippingAddress.city}, {userData.shippingAddress.zip}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() => navigate('/profile')}
+                          className="text-primary font-bold text-xs hover:underline"
+                        >
+                          CAMBIAR
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col gap-2">
+                        <p className="text-sm text-gray-500">No tienes una dirección de envío guardada.</p>
+                        <button
+                          onClick={() => navigate('/profile')}
+                          className="flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-gray-300 text-slate-500 hover:text-primary hover:border-primary/50 transition-colors text-sm font-medium"
+                        >
+                          <span className="material-symbols-outlined text-lg">add_location</span>
+                          AGREGAR
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+
               {/* Promo Code (Desktop only visible here for simplicity, or add back) */}
 
               <div className="flex flex-col gap-3 md:gap-4">
@@ -105,12 +186,11 @@ export default function Cart() {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-text-secondary dark:text-gray-400 text-sm font-medium">Envío</span>
-                  <span className="text-primary text-sm font-bold">Gratis</span>
+                  <span className={`text-sm font-bold ${shippingCost === 0 ? 'text-primary' : 'text-text-main dark:text-white'}`}>
+                    {isCalculating ? 'Calculando...' : (shippingCost > 0 ? `$${shippingCost}` : (selectedAddress ? 'Gratis' : 'Seleccionar dirección'))}
+                  </span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-text-secondary dark:text-gray-400 text-sm font-medium">Impuestos (7%)</span>
-                  <span className="text-text-main dark:text-white text-sm font-bold">${tax.toFixed(2)}</span>
-                </div>
+
                 <div className="h-px bg-gray-200 dark:bg-gray-700 my-1"></div>
                 <div className="flex justify-between items-center">
                   <span className="text-text-main dark:text-white text-lg font-bold">Total</span>
@@ -119,16 +199,23 @@ export default function Cart() {
               </div>
 
               <button
-                onClick={() => navigate('/checkout')}
-                className="flex w-full items-center justify-center gap-2 rounded-xl h-14 bg-primary text-text-main text-base font-bold shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 mt-2"
+                onClick={() => {
+                  if (!hasValidAddress) {
+                    showToast("Debe tener una direccion de envio para poder comprar, por favor agreguelo", "error");
+                  } else {
+                    navigate('/checkout');
+                  }
+                }}
+                className={`flex w-full items-center justify-center gap-2 rounded-xl h-14 bg-primary text-text-main text-base font-bold shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 mt-2 disabled:opacity-50 disabled:pointer-events-none`}
+                disabled={isCalculating}
               >
-                <span>Pagar</span>
-                <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
+                <span>{isCalculating ? 'Calculando...' : 'Pagar'}</span>
+                {!isCalculating && <span className="material-symbols-outlined text-[20px]">arrow_forward</span>}
               </button>
             </div>
           </div>
         )}
       </div>
-    </div>
+    </div >
   );
 }

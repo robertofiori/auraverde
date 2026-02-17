@@ -10,9 +10,9 @@ export default {
       colors: {
         "primary": "#13ec37",
         "background-light": "#f6f8f6",
-        "background-dark": "#102213",
+        "background-dark": "#020617", // Slate 950 - Premium deep dark
         "surface-light": "#ffffff",
-        "surface-dark": "#1a2c1e",
+        "surface-dark": "#0f172a", // Slate 900 - Slightly lighter for cards
       },
       fontFamily: {
         "display": ["Varela Round", "sans-serif"],
