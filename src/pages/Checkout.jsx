@@ -8,10 +8,11 @@ import MercadoPagoCheckout from '../components/MercadoPagoCheckout';
 
 export default function Checkout() {
     const navigate = useNavigate();
-    const { cartItems, total, subtotal, tax, clearCart } = useCart();
+    const { cartItems, total, subtotal, tax, clearCart, shippingCost } = useCart();
     const { createOrder } = useOrders();
     const { currentUser, userData } = useAuth();
     const [isProcessing, setIsProcessing] = useState(false);
+    const [orderId, setOrderId] = useState(null);
 
     // Redirect if no shipping address
     useEffect(() => {
@@ -42,20 +43,22 @@ export default function Checkout() {
                 date: new Date().toLocaleDateString() // Fallback string
             };
 
-            await createOrder(orderData);
-            clearCart();
-            navigate('/success');
+            const id = await createOrder(orderData);
+            setOrderId(id);
+            // We do NOT clear cart or navigate here. 
+            // We wait for the user to proceed with MercadoPago.
+            // Clearing cart should happen on success page or webhook handling.
+
         } catch (error) {
             console.error("Checkout failed", error);
             alert("Error: " + error.message);
-        } finally {
             setIsProcessing(false);
         }
     };
 
-    if (cartItems.length === 0) {
-        // Allow rendering strictly for transition, but usually redirect
-        // We'll keep the return null pattern or redirect effect
+    if (cartItems.length === 0 && !orderId) {
+        // Only redirect if we don't have an active order being processed
+        // But for better UX, maybe just show empty state or redirect effect
     }
 
     return (
@@ -76,7 +79,6 @@ export default function Checkout() {
                 {/* Left Col: Forms */}
                 <div className="flex flex-col gap-6">
                     {/* Shipping Info */}
-                    {/* Shipping Info - Read Only */}
                     <div className="bg-white dark:bg-surface-dark p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-white/5">
                         <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                             <span className="material-symbols-outlined text-primary">local_shipping</span>
@@ -98,16 +100,6 @@ export default function Checkout() {
                             </button>
                         </div>
                     </div>
-
-                    {/* Payment Info - REMOVED for MercadoPago Integration
-                    <div className="bg-white dark:bg-surface-dark p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-white/5">
-                        <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                            <span className="material-symbols-outlined text-primary">credit_card</span>
-                            Método de Pago
-                        </h2>
-                        ...
-                    </div>
-                    */}
                 </div>
 
                 {/* Right Col: Order Summary */}
@@ -137,7 +129,11 @@ export default function Checkout() {
 
                             <div className="flex justify-between text-slate-500 dark:text-gray-400">
                                 <span>Envío</span>
-                                <span className="text-green-500 font-bold">Gratis</span>
+                                {shippingCost === 0 ? (
+                                    <span className="text-green-500 font-bold">Gratis</span>
+                                ) : (
+                                    <span className="font-bold text-slate-900 dark:text-white">${shippingCost.toFixed(2)}</span>
+                                )}
                             </div>
                             <div className="h-px bg-gray-100 dark:bg-white/10 my-2"></div>
                             <div className="flex justify-between text-lg font-bold text-slate-900 dark:text-white">
@@ -148,17 +144,17 @@ export default function Checkout() {
 
                         {/* Payment Action */}
                         <div className="mt-6">
-                            {!isProcessing ? (
+                            {!orderId ? (
                                 <button
                                     onClick={handleSubmit}
                                     type="submit"
-                                    className="w-full py-4 bg-primary hover:bg-emerald-600 text-white font-bold rounded-xl shadow-lg shadow-emerald-500/30 transition-all flex items-center justify-center gap-2"
+                                    disabled={isProcessing}
+                                    className="w-full py-4 bg-primary hover:bg-emerald-600 text-white font-bold rounded-xl shadow-lg shadow-emerald-500/30 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                                 >
-                                    Confirmar Datos y Pagar
+                                    {isProcessing ? 'Procesando...' : 'Confirmar Datos y Pagar'}
                                 </button>
                             ) : (
-                                // Once form is submitted and order created, show MP Button
-                                <MercadoPagoCheckout orderId="temp-order-id" total={total} />
+                                <MercadoPagoCheckout orderId={orderId} total={total} items={cartItems} shippingCost={shippingCost} />
                             )}
                         </div>
                     </div>

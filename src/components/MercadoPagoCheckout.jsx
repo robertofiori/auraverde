@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
 
-const PUBLIC_KEY = 'TEST-00000000-0000-0000-0000-000000000000'; // Replace with YOUR Public Key
+const PUBLIC_KEY = 'APP_USR-ba40ce42-cf76-493a-89e2-d548df4447d4'; // Replace with YOUR Public Key
 
-export default function MercadoPagoCheckout({ orderId, total }) {
+export default function MercadoPagoCheckout({ orderId, total, items, shippingCost }) {
     const [preferenceId, setPreferenceId] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -15,25 +15,54 @@ export default function MercadoPagoCheckout({ orderId, total }) {
     const createPreference = async () => {
         setIsLoading(true);
         try {
-            // SIMULACIÓN DE BACKEND:
-            console.log("Simulating backend call for Order:", orderId);
+            // Prepare items array
+            const mpItems = items.map(item => ({
+                id: item.id,
+                title: item.name,
+                currency_id: 'ARS',
+                picture_url: item.image,
+                description: item.name,
+                category_id: 'gardening',
+                quantity: item.quantity,
+                unit_price: Number(item.price)
+            }));
 
-            // MOCK DELAY (Simula tiempo de red)
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            // Add Shipping as an item if cost > 0
+            if (shippingCost > 0) {
+                mpItems.push({
+                    id: 'shipping',
+                    title: 'Envío',
+                    currency_id: 'ARS',
+                    description: 'Costo de envío',
+                    quantity: 1,
+                    unit_price: Number(shippingCost)
+                });
+            }
 
-            // Simular respuesta exitosa
-            // En un caso real, obtendríamos un preferenceId del backend.
-            // Aquí redirigimos directamente a nuestra página de éxito simulada.
+            const apiUrl = import.meta.env.DEV
+                ? 'http://127.0.0.1:5001/auraverde-db/us-central1/createPreference'
+                : 'https://us-central1-auraverde-db.cloudfunctions.net/createPreference';
 
-            alert("Modo Simulación: Redirigiendo a página de éxito...");
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    items: mpItems,
+                    orderId: orderId,
+                }),
+            });
 
-            // Redirigir a la página de éxito interna
-            // Nota: En producción real, esto sería window.location.href = data.init_point (URL de MercadoPago)
-            window.location.href = `/auraverde/success?collection_status=approved&external_reference=${orderId}&payment_type=simulated`;
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
 
+            const { id } = await response.json();
+            setPreferenceId(id);
         } catch (error) {
-            console.error(error);
-            alert("Error en la simulación.");
+            console.error("Error creating preference:", error);
+            alert("Error al inicializar el pago. Intenta nuevamente.");
         } finally {
             setIsLoading(false);
         }

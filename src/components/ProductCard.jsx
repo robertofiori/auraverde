@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-export default function ProductCard({ id, name, type, price, image, isNew, onAddToCart }) {
+export default function ProductCard({ id, name, type, price, image, isNew, badge, onAddToCart }) {
   const { toggleFavorite, userData } = useAuth();
   const isFavorite = userData?.favorites?.includes(id);
+
+  // Determine which badge to show (mutually exclusive)
+  const activeBadge = badge || (isNew ? 'nuevo' : null);
 
   return (
     <div className="group flex flex-col gap-3">
@@ -15,9 +18,12 @@ export default function ProductCard({ id, name, type, price, image, isNew, onAdd
             src={image}
           />
         </Link>
-        {isNew && (
-          <div className="absolute top-3 left-3 px-2 py-1 bg-primary text-slate-900 text-[10px] font-bold uppercase tracking-wider rounded-md">
-            Nuevo
+
+        {activeBadge && activeBadge !== 'none' && (
+          <div className={`absolute top-3 left-3 px-2 py-1 text-white text-[10px] font-black uppercase tracking-wider rounded-md shadow-md z-10
+            ${activeBadge === 'nuevo' ? 'bg-emerald-500' : 'bg-red-500'}
+          `}>
+            {activeBadge}
           </div>
         )}
 

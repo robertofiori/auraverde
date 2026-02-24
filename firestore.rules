@@ -5,12 +5,25 @@ service cloud.firestore {
     // Permite leer productos a todos, escribir solo a admins
     match /products/{product} {
       allow read: if true;
-      allow write: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      allow update: if request.auth != null && (
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stock'])) ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+      );
+      allow create, delete: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
     // Usuarios solo pueden leer/escribir sus propios datos
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Pedidos: Crear si autenticado. Leer/Actualizar el dueño o el admin.
+    match /orders/{orderId} {
+      allow create: if request.auth != null;
+      allow read, update: if request.auth != null && (
+        resource.data.userId == request.auth.uid || 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+      );
     }
 
     // Por defecto denegar todo

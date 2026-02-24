@@ -8,6 +8,7 @@ export default function ProductDetail() {
   const { id } = useParams();
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
   const { product, loading, error } = useProduct(id);
 
   if (loading) {
@@ -57,9 +58,71 @@ export default function ProductDetail() {
         </div>
       </header>
 
-      {/* Hero Image */}
-      <div className="relative w-full h-[55vh] lg:h-[60vh] shrink-0 bg-gray-200 dark:bg-gray-800">
-        <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url('${product.image}')` }}></div>
+      {/* Hero Image / Carousel Section */}
+      <div className="relative w-full h-[55vh] lg:h-[75vh] shrink-0 bg-gray-50 dark:bg-gray-950 overflow-hidden flex items-center justify-center">
+        {/* Animated Blurred Background (Desktop only) */}
+        <div className="absolute inset-0 hidden lg:block overflow-hidden transition-all duration-1000">
+          <div
+            className="absolute inset-0 bg-cover bg-center scale-110 blur-[80px] opacity-40 dark:opacity-30 transition-all duration-700"
+            style={{ backgroundImage: `url(${activeImageIndex === 0 ? product.image : (product.image2 || product.image)})` }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-background-light dark:to-background-dark" />
+        </div>
+
+        {/* Images Carousel */}
+        <div className="relative z-10 w-full h-full flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${activeImageIndex * 100}%)` }}>
+          {/* Main Image Container */}
+          <div className="w-full h-full shrink-0 flex items-center justify-center p-0 lg:p-14">
+            <img
+              src={product.image}
+              alt={product.name}
+              className="w-full h-full lg:w-auto lg:max-h-full object-cover lg:object-contain lg:rounded-3xl lg:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.4)] transition-all duration-500"
+            />
+          </div>
+
+          {/* Secondary Image Container */}
+          {product.image2 && (
+            <div className="w-full h-full shrink-0 flex items-center justify-center p-0 lg:p-14">
+              <img
+                src={product.image2}
+                alt={`${product.name} - Alternativa`}
+                className="w-full h-full lg:w-auto lg:max-h-full object-cover lg:object-contain lg:rounded-3xl lg:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.4)] transition-all duration-500"
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Carousel Navigation Indicators */}
+        {product.image2 && (
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-30">
+            <button
+              onClick={() => setActiveImageIndex(0)}
+              className={`h-1.5 w-10 rounded-full transition-all duration-300 ${activeImageIndex === 0 ? 'bg-primary scale-110 shadow-[0_0_15px_rgba(16,185,129,0.5)]' : 'bg-black/20 dark:bg-white/20 hover:bg-black/40 dark:hover:bg-white/40'}`}
+            />
+            <button
+              onClick={() => setActiveImageIndex(1)}
+              className={`h-1.5 w-10 rounded-full transition-all duration-300 ${activeImageIndex === 1 ? 'bg-primary scale-110 shadow-[0_0_15px_rgba(16,185,129,0.5)]' : 'bg-black/20 dark:bg-white/20 hover:bg-black/40 dark:hover:bg-white/40'}`}
+            />
+          </div>
+        )}
+
+        {/* Desktop Navigation Arrows */}
+        {product.image2 && (
+          <div className="absolute inset-0 z-20 hidden lg:flex items-center justify-between px-8 pointer-events-none">
+            <button
+              onClick={() => setActiveImageIndex(0)}
+              className={`h-14 w-14 flex items-center justify-center rounded-full bg-white/10 dark:bg-black/20 backdrop-blur-xl border border-white/20 text-white pointer-events-auto transition-all hover:bg-primary hover:text-black hover:scale-110 active:scale-95 ${activeImageIndex === 0 ? 'opacity-30 cursor-default' : 'opacity-100 shadow-xl'}`}
+            >
+              <span className="material-symbols-outlined text-3xl">chevron_left</span>
+            </button>
+            <button
+              onClick={() => setActiveImageIndex(1)}
+              className={`h-14 w-14 flex items-center justify-center rounded-full bg-white/10 dark:bg-black/20 backdrop-blur-xl border border-white/20 text-white pointer-events-auto transition-all hover:bg-primary hover:text-black hover:scale-110 active:scale-95 ${activeImageIndex === 1 ? 'opacity-30 cursor-default' : 'opacity-100 shadow-xl'}`}
+            >
+              <span className="material-symbols-outlined text-3xl">chevron_right</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Content Sheet */}
@@ -68,8 +131,17 @@ export default function ProductDetail() {
         <div className="mb-6 flex flex-col gap-2">
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white leading-tight">{product.name}</h1>
-              <p className="text-lg italic text-gray-500 dark:text-gray-400 mt-1">{product.type}</p>
+              <div className="flex items-center gap-2 mb-1">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white leading-tight">{product.name}</h1>
+                {(product.badge || product.isNew) && (
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest text-white shadow-sm
+                    ${(product.badge === 'oferta') ? 'bg-red-500' : 'bg-emerald-500'}
+                  `}>
+                    {product.badge === 'oferta' ? 'Oferta' : 'Nuevo'}
+                  </span>
+                )}
+              </div>
+              <p className="text-lg italic text-gray-500 dark:text-gray-400">{product.type}</p>
             </div>
             <div className="flex flex-col items-end">
               <span className="text-2xl font-bold text-primary">${product.price.toFixed(2)}</span>
@@ -82,27 +154,34 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        {/* Variant Selector (Static for demo) */}
-        <div className="mb-8">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Tamaño de Maceta</h3>
-          <div className="flex gap-3 overflow-x-auto hide-scrollbar pb-1">
-            <button className="group relative flex min-w-[80px] cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border border-transparent bg-primary px-4 py-3 text-black shadow-sm transition-all active:scale-95">
-              <span className="text-sm font-bold">Pequeña</span>
-              <span className="text-xs font-medium opacity-80">2"</span>
-              <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black text-white">
-                <span className="material-symbols-outlined text-[14px]">check</span>
-              </div>
-            </button>
-            <button className="group flex min-w-[80px] cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark px-4 py-3 text-gray-600 dark:text-gray-300 transition-all hover:border-primary/50 active:scale-95">
-              <span className="text-sm font-bold">Mediana</span>
-              <span className="text-xs font-medium opacity-60">4"</span>
-            </button>
-            <button className="group flex min-w-[80px] cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark px-4 py-3 text-gray-600 dark:text-gray-300 transition-all hover:border-primary/50 active:scale-95">
-              <span className="text-sm font-bold">Grande</span>
-              <span className="text-xs font-medium opacity-60">6"</span>
-            </button>
+        {/* Variant Selector */}
+        {(product.potPequeña || product.potMediana || product.potGrande) && (
+          <div className="mb-8">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Tamaño de Maceta</h3>
+            <div className="flex gap-3 overflow-x-auto hide-scrollbar pb-1">
+              {[
+                { id: 'pequena', name: 'Pequeña', val: product.potPequeña },
+                { id: 'mediana', name: 'Mediana', val: product.potMediana },
+                { id: 'grande', name: 'Grande', val: product.potGrande }
+              ].filter(p => p.val).map((size) => (
+                <button
+                  key={size.id}
+                  className={`group relative flex min-w-[80px] cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border px-4 py-3 transition-all active:scale-95
+                    ${product.potDefault === size.id ? 'bg-primary border-transparent text-black shadow-sm' : 'bg-surface-light dark:bg-surface-dark border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300'}
+                  `}
+                >
+                  <span className="text-sm font-bold">{size.name}</span>
+                  <span className="text-xs font-medium opacity-80">{size.val}</span>
+                  {product.potDefault === size.id && (
+                    <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black text-white">
+                      <span className="material-symbols-outlined text-[14px]">check</span>
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Description */}
         <div className="mb-8">
@@ -114,38 +193,46 @@ export default function ProductDetail() {
         </div>
 
         {/* Care Tips */}
-        <div className="mb-8">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Cuidados</h3>
-          <div className="grid grid-cols-3 gap-3">
-            <div className="flex flex-col items-center gap-2 rounded-2xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-gray-100 dark:border-gray-800">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-500">
-                <span className="material-symbols-outlined">wb_sunny</span>
-              </div>
-              <div className="text-center">
-                <span className="block text-xs font-bold text-gray-900 dark:text-white">Luz</span>
-                <span className="block text-[10px] text-gray-500">Brillante</span>
-              </div>
-            </div>
-            <div className="flex flex-col items-center gap-2 rounded-2xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-gray-100 dark:border-gray-800">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-500">
-                <span className="material-symbols-outlined">water_drop</span>
-              </div>
-              <div className="text-center">
-                <span className="block text-xs font-bold text-gray-900 dark:text-white">Agua</span>
-                <span className="block text-[10px] text-gray-500">Mínima</span>
-              </div>
-            </div>
-            <div className="flex flex-col items-center gap-2 rounded-2xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-gray-100 dark:border-gray-800">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 text-red-500">
-                <span className="material-symbols-outlined">thermostat</span>
-              </div>
-              <div className="text-center">
-                <span className="block text-xs font-bold text-gray-900 dark:text-white">Temp</span>
-                <span className="block text-[10px] text-gray-500">Cálida</span>
-              </div>
+        {(product.careLuz || product.careAgua || product.careTemp) && (
+          <div className="mb-8">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Cuidados</h3>
+            <div className="grid grid-cols-3 gap-3">
+              {product.careLuz && (
+                <div className="flex flex-col items-center gap-2 rounded-2xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-500">
+                    <span className="material-symbols-outlined">wb_sunny</span>
+                  </div>
+                  <div className="text-center">
+                    <span className="block text-xs font-bold text-gray-900 dark:text-white">Luz</span>
+                    <span className="block text-[10px] text-gray-500">{product.careLuz}</span>
+                  </div>
+                </div>
+              )}
+              {product.careAgua && (
+                <div className="flex flex-col items-center gap-2 rounded-2xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-500">
+                    <span className="material-symbols-outlined">water_drop</span>
+                  </div>
+                  <div className="text-center">
+                    <span className="block text-xs font-bold text-gray-900 dark:text-white">Agua</span>
+                    <span className="block text-[10px] text-gray-500">{product.careAgua}</span>
+                  </div>
+                </div>
+              )}
+              {product.careTemp && (
+                <div className="flex flex-col items-center gap-2 rounded-2xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 text-red-500">
+                    <span className="material-symbols-outlined">thermostat</span>
+                  </div>
+                  <div className="text-center">
+                    <span className="block text-xs font-bold text-gray-900 dark:text-white">Temp</span>
+                    <span className="block text-[10px] text-gray-500">{product.careTemp}</span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-        </div>
+        )}
 
         <div className="h-6"></div>
       </main>

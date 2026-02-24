@@ -10,8 +10,8 @@ export default function MainLayout() {
   const { currentUser, userRole, logout } = useAuth();
 
   const navItems = [
-    { icon: "home", label: "Inicio", path: "/catalog" },
-    { icon: "search", label: "Buscar", path: "/catalog" }, // Reusing catalog for search for now
+    { icon: "home", label: "Inicio", path: "/" },
+    { icon: "search", label: "Buscar", path: "/catalog" },
     { icon: "shopping_cart", label: "Carrito", path: "/cart" },
     { icon: "person", label: "Perfil", path: "/profile" }
   ];
@@ -65,7 +65,7 @@ export default function MainLayout() {
                   className="flex items-center gap-3 p-3 rounded-xl w-full text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
                 >
                   <span className="material-symbols-outlined">admin_panel_settings</span>
-                  <span className="font-medium text-sm">Panel Admin</span>
+                  <span className="font-medium text-sm">Panel Maestro</span>
                 </button>
               )}
               <button
@@ -102,7 +102,7 @@ export default function MainLayout() {
 
       {/* Mobile Bottom Nav */}
       <div className="md:hidden">
-        <BottomNav />
+        {!['/cart', '/checkout'].includes(location.pathname) && !location.pathname.startsWith('/product/') && <BottomNav />}
       </div>
     </div>
   );

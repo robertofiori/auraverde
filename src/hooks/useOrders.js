@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { db } from '../firebase/config';
-import { collection, addDoc, query, where, onSnapshot, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, query, where, onSnapshot, serverTimestamp, writeBatch, doc, increment } from 'firebase/firestore';
 import { useAuth } from '../context/AuthContext';
 
 export function useOrders() {
@@ -9,22 +9,38 @@ export function useOrders() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Create Order
+    // Create Order & Update Stock
     const createOrder = async (orderData) => {
         if (!currentUser) throw new Error("Debes iniciar sesión para comprar");
         setLoading(true);
         try {
-            const docRef = await addDoc(collection(db, "orders"), {
+            const batch = writeBatch(db);
+
+            // 1. Create Order Document
+            const orderRef = doc(collection(db, "orders"));
+            batch.set(orderRef, {
                 ...orderData,
                 userId: currentUser.uid,
                 userEmail: currentUser.email,
                 createdAt: serverTimestamp(),
-                status: 'Processing', // Processing, Shipped, Delivered
-                paymentStatus: 'pending' // pending, paid
+                status: 'Processing',
+                paymentStatus: 'pending'
             });
-            return docRef.id;
+
+            // 2. Update Stock for each item atomically
+            if (orderData.items && orderData.items.length > 0) {
+                orderData.items.forEach(item => {
+                    const productRef = doc(db, "products", String(item.id));
+                    batch.update(productRef, {
+                        stock: increment(-item.quantity)
+                    });
+                });
+            }
+
+            await batch.commit();
+            return orderRef.id;
         } catch (err) {
-            console.error("Error creating order:", err);
+            console.error("Error creating order with stock sync:", err);
             setError(err.message);
             throw err;
         } finally {

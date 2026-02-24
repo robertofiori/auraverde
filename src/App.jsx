@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import MainLayout from './components/MainLayout';
 import Home from './pages/Home';
@@ -14,7 +14,7 @@ import Success from './pages/Success';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Migration from './pages/Migration';
-import AdminProducts from './pages/AdminProducts';
+import AdminDashboard from './pages/AdminDashboard';
 
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -22,7 +22,7 @@ import { ToastProvider } from './context/ToastContext';
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <ToastProvider>
         <ThemeProvider>
           <AuthProvider>
@@ -42,14 +42,14 @@ function App() {
                   <Route path="/register" element={<Register />} />
                   <Route path="/migrate" element={<Migration />} />
                   <Route path="/favorites" element={<Favorites />} />
-                  <Route path="/admin" element={<AdminProducts />} />
+                  <Route path="/admin" element={<AdminDashboard />} />
                 </Route>
               </Routes>
             </CartProvider>
           </AuthProvider>
         </ThemeProvider>
       </ToastProvider>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

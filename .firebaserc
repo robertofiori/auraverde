@@ -1,5 +1,7 @@
 {
   "projects": {
     "default": "auraverde-db"
-  }
+  },
+  "targets": {},
+  "etags": {}
 }
