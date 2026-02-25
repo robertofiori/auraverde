@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Product Catalog - Succulents</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec37",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102213",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2c1e",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 transition-colors duration-200">
+<div class="relative flex h-screen w-full flex-col overflow-hidden max-w-md mx-auto shadow-2xl bg-background-light dark:bg-background-dark">
+<!-- Top App Bar -->
+<header class="flex items-center justify-between px-6 py-4 bg-background-light dark:bg-background-dark z-10 shrink-0">
+<!-- Left: Title -->
+<h1 class="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">Catalog</h1>
+<!-- Right: Icons -->
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-900 dark:text-white">
+<span class="material-symbols-outlined text-2xl">search</span>
+</button>
+<button class="relative flex items-center justify-center p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-900 dark:text-white">
+<span class="material-symbols-outlined text-2xl">shopping_cart</span>
+<span class="absolute top-1 right-1 h-2.5 w-2.5 rounded-full bg-primary border-2 border-background-light dark:border-background-dark"></span>
+</button>
+</div>
+</header>
+<!-- Search Bar (Integrated below header for better accessibility) -->
+<div class="px-6 pb-2 shrink-0">
+<div class="relative flex items-center w-full h-12 rounded-xl bg-white dark:bg-surface-dark shadow-sm border border-slate-100 dark:border-slate-800 overflow-hidden group focus-within:ring-2 focus-within:ring-primary/50 transition-all">
+<div class="grid place-items-center h-full w-12 text-slate-400">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="peer h-full w-full outline-none text-sm text-slate-700 dark:text-slate-200 pr-2 bg-transparent placeholder-slate-400 font-medium" id="search" placeholder="Search plants..." type="text"/>
+</div>
+</div>
+<!-- Filters / Chips -->
+<div class="pl-6 py-4 shrink-0">
+<div class="flex gap-3 overflow-x-auto hide-scrollbar pr-6 items-center">
+<!-- Filter Button -->
+<button class="flex shrink-0 h-10 w-10 items-center justify-center rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-md">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+</button>
+<!-- Chips -->
+<button class="flex h-10 shrink-0 items-center justify-center px-5 rounded-full bg-primary text-slate-900 font-bold shadow-sm shadow-primary/20">
+                    All
+                </button>
+<button class="flex h-10 shrink-0 items-center justify-center px-5 rounded-full bg-white dark:bg-surface-dark border border-slate-100 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-semibold whitespace-nowrap">
+                    Dracaena
+                </button>
+<button class="flex h-10 shrink-0 items-center justify-center px-5 rounded-full bg-white dark:bg-surface-dark border border-slate-100 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-semibold whitespace-nowrap">
+                    Bonsai
+                </button>
+<button class="flex h-10 shrink-0 items-center justify-center px-5 rounded-full bg-white dark:bg-surface-dark border border-slate-100 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-semibold whitespace-nowrap">
+                    Succulents
+                </button>
+<button class="flex h-10 shrink-0 items-center justify-center px-5 rounded-full bg-white dark:bg-surface-dark border border-slate-100 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-semibold whitespace-nowrap">
+                    Palms
+                </button>
+</div>
+</div>
+<!-- Product Grid (Scrollable Area) -->
+<div class="flex-1 overflow-y-auto px-6 pb-24 hide-scrollbar">
+<div class="grid grid-cols-2 gap-x-4 gap-y-8">
+<!-- Product 1 -->
+<div class="group flex flex-col gap-3">
+<div class="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-slate-100 dark:bg-surface-dark">
+<img alt="Echeveria Lola succulent top down view" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Echeveria Lola succulent top down view" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0eZ15aq4T37Ryj4bDgj81ZEUyIYsh_RKRe_i8s-gujmUO-i27DiYWUuBzPiPJ_YWIS2p_w47QKZMKDQWOHo6CRndOci24Fq8e8I8K-sMCpajjkdksObyDBwAwTd51gu_8U6d9MPdleEc-8Hnb1zzYYCFR_l_Ypk_iSruncVz3mVHzQopMI-9CTT8lKOVIlGLTyDkJF-HpDQXMvf6jWJpWFFQWuC4q3TuYCE1oQ49Fy4VkatuhBcPfA-InsniE7TV93a8vHXmlmM7L"/>
+<button class="absolute bottom-3 right-3 h-10 w-10 rounded-full bg-white/90 dark:bg-surface-dark/90 backdrop-blur-sm flex items-center justify-center text-slate-900 dark:text-white shadow-lg active:scale-90 transition-all hover:bg-primary hover:text-slate-900">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-slate-900 dark:text-white text-base font-bold leading-tight">Echeveria Lola</h3>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-1">Small succulent</p>
+</div>
+</div>
+<p class="text-slate-900 dark:text-primary text-sm font-bold mt-2">$12.00</p>
+</div>
+</div>
+<!-- Product 2 -->
+<div class="group flex flex-col gap-3">
+<div class="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-slate-100 dark:bg-surface-dark">
+<img alt="Dracaena Marginata plant indoor pot" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Dracaena Marginata plant indoor pot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD57UKN04xBtoohXvHEHpARBywa8wc9eKFvD7XDp4cKqtu9QbUHhMHlIAQTqq_YH7bNSJZY_0dW3eOTEeI9MC9bd_WXnHPghUkvnYzkep7OhHBL-V9YT8ONnxMMkepRc2VuSeXjffy01QOpFPIiYTvJQwC61ojAnDKXHvEixwbL_OCVDtP5FGpHB9huUjYwZVBarcehQQXtsDxIj-0kpDwgAjMXOMgDtuAfllSqSFCXo5viLkIt76k5EhbsAZ_oBuXDEOk1HeJbKmDY"/>
+<button class="absolute bottom-3 right-3 h-10 w-10 rounded-full bg-white/90 dark:bg-surface-dark/90 backdrop-blur-sm flex items-center justify-center text-slate-900 dark:text-white shadow-lg active:scale-90 transition-all hover:bg-primary hover:text-slate-900">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-slate-900 dark:text-white text-base font-bold leading-tight">Dracaena Marg.</h3>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-1">Indoor tree</p>
+</div>
+</div>
+<p class="text-slate-900 dark:text-primary text-sm font-bold mt-2">$45.00</p>
+</div>
+</div>
+<!-- Product 3 -->
+<div class="group flex flex-col gap-3">
+<div class="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-slate-100 dark:bg-surface-dark">
+<img alt="Bonsai Ficus miniature tree" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Bonsai Ficus miniature tree" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuQ1GGR9x_WTdo-L0S5BynKVM9VNi2KLnWCv4u1BHbfC0ie4CsUb1AH_2sDOTV1EIOAyydQTq86WSJXuVqYbuIctNrkOoDPfqY4-2WVg-VcVGxkgXgLhCeSe8AOSMdCpdWYBwJDeS9tU9OxFtysrT5GG8kDBiTbp9WeJrIwpzQIw9DsA28HoOQo78lMm95heiSA-aLd_HzAeO8wCyPlJKyYrXEE-tXalpUWPPAj2mSTuWxxzkmW5tkBvw7RQdWDU6lyq_4RCuJpbGA"/>
+<!-- New Badge -->
+<div class="absolute top-3 left-3 px-2 py-1 bg-primary text-slate-900 text-[10px] font-bold uppercase tracking-wider rounded-md">
+                            New
+                        </div>
+<button class="absolute bottom-3 right-3 h-10 w-10 rounded-full bg-white/90 dark:bg-surface-dark/90 backdrop-blur-sm flex items-center justify-center text-slate-900 dark:text-white shadow-lg active:scale-90 transition-all hover:bg-primary hover:text-slate-900">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-slate-900 dark:text-white text-base font-bold leading-tight">Bonsai Ficus</h3>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-1">Miniature tree</p>
+</div>
+</div>
+<p class="text-slate-900 dark:text-primary text-sm font-bold mt-2">$30.00</p>
+</div>
+</div>
+<!-- Product 4 -->
+<div class="group flex flex-col gap-3">
+<div class="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-slate-100 dark:bg-surface-dark">
+<img alt="Green Areca Palm leaves close up" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Green Areca Palm leaves close up" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAUIOGKnSrRSRBsNH6nVvIGWGAjTC_RjE5eYoFgCX3nVZhG8onMlpG6odQCRlezHvUBrnLoPigEGnahxWvlORm1v5BBRZG7xMRj0yVKYjlMVr8I-5L0EKYnDc-S8bLYQDmSnpA4ZZGvfEYSPrA3gzmhrunA2P1IoiQgF9W1018hn-beC_BOq0-UnIp5TcFSKAZzLb1jm7J7S_uGkx47DlPPxEmEQ4a96EzOfGPzv9UGY6vBVAbtpedg9j5DVnWaiSvg8HLvPT1HE1L"/>
+<button class="absolute bottom-3 right-3 h-10 w-10 rounded-full bg-white/90 dark:bg-surface-dark/90 backdrop-blur-sm flex items-center justify-center text-slate-900 dark:text-white shadow-lg active:scale-90 transition-all hover:bg-primary hover:text-slate-900">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-slate-900 dark:text-white text-base font-bold leading-tight">Areca Palm</h3>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-1">Air purifying</p>
+</div>
+</div>
+<p class="text-slate-900 dark:text-primary text-sm font-bold mt-2">$25.00</p>
+</div>
+</div>
+<!-- Product 5 -->
+<div class="group flex flex-col gap-3">
+<div class="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-slate-100 dark:bg-surface-dark">
+<img alt="Aloe Vera plant in white pot" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Aloe Vera plant in white pot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfjrTHo8MXN3qD5PVNyclKEE_LCe5L71uyaOi8yGBA9XUtVSfajLxPMY29U6lUbZK2E8MHsrmHvNlI6zqvkMAgT8CdDxbZ8sG8FdQfL3BHz3SANG0_6iu6Mewm5SNjWV3wI0EcDF3lQV7TXY-3EYsAkN5zec0-orJkKfDL-i33XXdodWx5IqvjLkjkdX1T-CdmyNcdm2K12tFpTYIkG2lOp5HVceiwh3_ErHSxtY-Hk9lEuYaAnSbRVQHEa-mBffh9SoTgtA7yjNIK"/>
+<button class="absolute bottom-3 right-3 h-10 w-10 rounded-full bg-white/90 dark:bg-surface-dark/90 backdrop-blur-sm flex items-center justify-center text-slate-900 dark:text-white shadow-lg active:scale-90 transition-all hover:bg-primary hover:text-slate-900">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-slate-900 dark:text-white text-base font-bold leading-tight">Aloe Vera</h3>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-1">Medicinal</p>
+</div>
+</div>
+<p class="text-slate-900 dark:text-primary text-sm font-bold mt-2">$18.00</p>
+</div>
+</div>
+<!-- Product 6 -->
+<div class="group flex flex-col gap-3">
+<div class="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-slate-100 dark:bg-surface-dark">
+<img alt="String of Pearls hanging succulent" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="String of Pearls hanging succulent" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXXU5YobKex3kwVW5GUM5bXC6_ctZHQSoRW_qNQbh3g9p93oaSRMcqMZB6pZX5EE8j9UAuv6ETV_EFs9pdLtMj566Qky3NQnqyuO6nT8tOCXzdomwBB0zrfQSK1sEURbbA0O05Q_GBSd4c9tqROmHIUdsTfcGdWAOC-5V2-ELxwyAolZEMDOWyvJ1cb4irkDMDcGr0v3yA2dWUQXp7Zv7thW4UTCGX3aRXgCBiUVuDNMp26Ts9B5MWJpif5mwp-qBQRiM6JEkw0BWY"/>
+<button class="absolute bottom-3 right-3 h-10 w-10 rounded-full bg-white/90 dark:bg-surface-dark/90 backdrop-blur-sm flex items-center justify-center text-slate-900 dark:text-white shadow-lg active:scale-90 transition-all hover:bg-primary hover:text-slate-900">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-slate-900 dark:text-white text-base font-bold leading-tight">String of Pearls</h3>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-1">Hanging plant</p>
+</div>
+</div>
+<p class="text-slate-900 dark:text-primary text-sm font-bold mt-2">$22.00</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation Bar -->
+<nav class="absolute bottom-0 w-full border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-background-dark pb-6 pt-2 px-6 shrink-0 z-20">
+<div class="flex justify-between items-end">
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">home</span>
+<span class="text-[10px] font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary relative" href="#">
+<div class="absolute -top-10 bg-primary/20 rounded-full w-12 h-12 flex items-center justify-center blur-lg opacity-50"></div>
+<span class="material-symbols-outlined text-2xl fill-current">grid_view</span>
+<span class="text-[10px] font-bold">Catalog</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">favorite</span>
+<span class="text-[10px] font-medium">Favorites</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

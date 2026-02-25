@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Succulent Shop Cart</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec37",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102213",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1c3020",
+                        "text-main": "#111812",
+                        "text-secondary": "#618968",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        /* Custom scrollbar hide for cleaner mobile look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-main dark:text-white antialiased transition-colors duration-200">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-hidden pb-32">
+<!-- Header -->
+<header class="sticky top-0 z-10 flex items-center justify-between bg-surface-light/95 dark:bg-background-dark/95 backdrop-blur-sm p-4 pb-2 border-b border-gray-100 dark:border-gray-800">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-full active:bg-gray-100 dark:active:bg-surface-dark cursor-pointer">
+<span class="material-symbols-outlined text-text-main dark:text-white" style="font-size: 24px;">arrow_back_ios_new</span>
+</div>
+<h2 class="text-text-main dark:text-white text-lg font-bold leading-tight flex-1 text-center">My Cart (3)</h2>
+<div class="flex w-12 items-center justify-end cursor-pointer">
+<p class="text-text-secondary dark:text-primary text-sm font-bold leading-normal">Clear</p>
+</div>
+</header>
+<!-- Cart Items List -->
+<div class="flex flex-col gap-4 p-4">
+<!-- Item 1 -->
+<div class="relative flex flex-col gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-xl shadow-sm border border-transparent dark:border-gray-800">
+<div class="flex items-start justify-between gap-4">
+<div class="flex items-center gap-4 flex-1">
+<div class="bg-center bg-no-repeat bg-cover rounded-lg aspect-square w-20 h-20 shrink-0 bg-gray-200" data-alt="Small potted Zebra Haworthia succulent with striped leaves" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDPlHL--70DecFejkH29QAgJtksKJCwRMAPJMYkSTw4xtwVFyBjegDhRrBc6xTvXJw6V6PWgxwiIv21fVemjTY1o6jA15jz6g8wMwFoweet0y_093VNACppH-jtSR5nfO2rTMSU2JRPlQPSSSqhdLQvnNLzhfR_lPLZq2E7cA2D7YRNZkC6I5EbW73rcAvEBaneCklZEh-B7LHCHRMNF5CZizxVKZL2uRSbQhur1C4Us0khdY97QqbDdKw540kVwCCHKi9sdWpPRo6L");'></div>
+<div class="flex flex-col justify-center h-full">
+<p class="text-text-main dark:text-white text-base font-bold leading-normal line-clamp-1">Zebra Haworthia</p>
+<p class="text-text-secondary dark:text-gray-400 text-sm font-medium leading-normal mb-2">Succulent</p>
+<p class="text-text-main dark:text-primary text-base font-bold leading-normal">$12.00</p>
+</div>
+</div>
+<!-- Delete Button (Top Right) -->
+<button class="text-gray-400 hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 20px;">delete</span>
+</button>
+</div>
+<!-- Quantity Stepper Row -->
+<div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-700 pt-3 mt-1">
+<span class="text-xs text-text-secondary dark:text-gray-500 font-medium">Quantity</span>
+<div class="flex items-center gap-3 bg-background-light dark:bg-background-dark rounded-full p-1 px-1">
+<button class="flex h-8 w-8 items-center justify-center rounded-full bg-white dark:bg-surface-dark shadow-sm text-text-main dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 18px;">remove</span>
+</button>
+<input class="w-8 p-0 text-center bg-transparent text-text-main dark:text-white font-bold border-none focus:ring-0 text-sm" readonly="" type="number" value="1"/>
+<button class="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-text-main shadow-sm hover:brightness-110 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 18px;">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="relative flex flex-col gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-xl shadow-sm border border-transparent dark:border-gray-800">
+<div class="flex items-start justify-between gap-4">
+<div class="flex items-center gap-4 flex-1">
+<div class="bg-center bg-no-repeat bg-cover rounded-lg aspect-square w-20 h-20 shrink-0 bg-gray-200" data-alt="Burro's Tail succulent cascading from a pot" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDTz0jEcYGug1thblApBMcTQIkPEXDCRmrIlryOwAvVGIzcLNT3PaxgbRihs7gQVoXzuEiBNDa_i7GJs4mOvlOKVzoJdtZJVvb6-sQFqz-CCsv3y7DC5MIxefcAXoi917TOwzOkSrzbH9D2QdLMhGZsSOEFDRqgSu33GjS0XX3r7we_ZnSxxVbI2JM-q8hGMPRiAoR_zIxIkwVVlObC52P15gB_ESOqIUoDh-8DaD-kIoA60slRLJ_ucMen1GXH6Lpe6mTvVxCp3KFX");'></div>
+<div class="flex flex-col justify-center h-full">
+<p class="text-text-main dark:text-white text-base font-bold leading-normal line-clamp-1">Burro's Tail</p>
+<p class="text-text-secondary dark:text-gray-400 text-sm font-medium leading-normal mb-2">Hanging Plant</p>
+<p class="text-text-main dark:text-primary text-base font-bold leading-normal">$18.50</p>
+</div>
+</div>
+<button class="text-gray-400 hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 20px;">delete</span>
+</button>
+</div>
+<div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-700 pt-3 mt-1">
+<span class="text-xs text-text-secondary dark:text-gray-500 font-medium">Quantity</span>
+<div class="flex items-center gap-3 bg-background-light dark:bg-background-dark rounded-full p-1 px-1">
+<button class="flex h-8 w-8 items-center justify-center rounded-full bg-white dark:bg-surface-dark shadow-sm text-text-main dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 18px;">remove</span>
+</button>
+<input class="w-8 p-0 text-center bg-transparent text-text-main dark:text-white font-bold border-none focus:ring-0 text-sm" readonly="" type="number" value="2"/>
+<button class="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-text-main shadow-sm hover:brightness-110 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 18px;">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="relative flex flex-col gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-xl shadow-sm border border-transparent dark:border-gray-800">
+<div class="flex items-start justify-between gap-4">
+<div class="flex items-center gap-4 flex-1">
+<div class="bg-center bg-no-repeat bg-cover rounded-lg aspect-square w-20 h-20 shrink-0 bg-gray-200" data-alt="Green Jade plant with thick glossy leaves" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCQkdWOmIDJ5jSaNdXEHazz4wFdxC_1CsFMp0XzDWmJJoTVWtca40nvGpiEoHEiM38LWy2ZsZlJpbWmPRpGWrD-GOaWIhn_hNtIL4_nzLVDtm3dXy1h_KfWLucv73DhYQE5f2HvB_GWxJjs0d45RsYxuX0B-i2R-2EsudpNZFCJAXkQcj_B-1BAD0lnQhPzCxd1emDAG8ULtc3jE6vXBfVUrG5TqIANQOExD59R0RjoxC-t3TbpX9LjcyfM9SKFSjgEEjFpUYBXQA8z");'></div>
+<div class="flex flex-col justify-center h-full">
+<p class="text-text-main dark:text-white text-base font-bold leading-normal line-clamp-1">Jade Plant</p>
+<p class="text-text-secondary dark:text-gray-400 text-sm font-medium leading-normal mb-2">Indoor Plant</p>
+<p class="text-text-main dark:text-primary text-base font-bold leading-normal">$9.00</p>
+</div>
+</div>
+<button class="text-gray-400 hover:text-red-500 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 20px;">delete</span>
+</button>
+</div>
+<div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-700 pt-3 mt-1">
+<span class="text-xs text-text-secondary dark:text-gray-500 font-medium">Quantity</span>
+<div class="flex items-center gap-3 bg-background-light dark:bg-background-dark rounded-full p-1 px-1">
+<button class="flex h-8 w-8 items-center justify-center rounded-full bg-white dark:bg-surface-dark shadow-sm text-text-main dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 18px;">remove</span>
+</button>
+<input class="w-8 p-0 text-center bg-transparent text-text-main dark:text-white font-bold border-none focus:ring-0 text-sm" readonly="" type="number" value="1"/>
+<button class="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-text-main shadow-sm hover:brightness-110 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 18px;">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Promo Code Section -->
+<div class="px-4 py-2">
+<h3 class="text-text-main dark:text-white text-sm font-bold mb-3 px-1">Promo Code</h3>
+<div class="flex w-full items-stretch rounded-xl h-12 shadow-sm">
+<div class="relative flex-1">
+<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+<span class="material-symbols-outlined text-gray-400" style="font-size: 20px;">local_offer</span>
+</div>
+<input class="flex w-full min-w-0 flex-1 h-full pl-10 pr-4 rounded-l-xl border-none bg-surface-light dark:bg-surface-dark text-text-main dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500 text-sm font-medium focus:ring-1 focus:ring-primary" placeholder="Enter discount code"/>
+</div>
+<button class="flex items-center justify-center rounded-r-xl bg-primary px-6 text-text-main text-sm font-bold hover:brightness-105 transition-all">
+                    Apply
+                </button>
+</div>
+</div>
+<!-- Cost Summary -->
+<div class="px-5 py-6 mt-2 border-t border-gray-200 dark:border-gray-800">
+<div class="flex flex-col gap-3">
+<div class="flex justify-between items-center">
+<span class="text-text-secondary dark:text-gray-400 text-sm font-medium">Subtotal</span>
+<span class="text-text-main dark:text-white text-sm font-bold">$58.00</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-text-secondary dark:text-gray-400 text-sm font-medium">Shipping</span>
+<span class="text-primary text-sm font-bold">Free</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-text-secondary dark:text-gray-400 text-sm font-medium">Tax</span>
+<span class="text-text-main dark:text-white text-sm font-bold">$4.20</span>
+</div>
+</div>
+</div>
+<!-- Sticky Bottom Footer -->
+<div class="fixed bottom-0 left-0 right-0 bg-surface-light dark:bg-background-dark border-t border-gray-100 dark:border-gray-800 p-4 px-6 pb-8 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] dark:shadow-none z-20">
+<div class="flex flex-col gap-4 max-w-md mx-auto w-full">
+<div class="flex justify-between items-end">
+<div class="flex flex-col">
+<span class="text-text-secondary dark:text-gray-400 text-xs font-medium uppercase tracking-wide">Total</span>
+<span class="text-2xl font-black text-text-main dark:text-white leading-none mt-1">$62.20</span>
+</div>
+</div>
+<button class="flex w-full items-center justify-center gap-2 rounded-xl h-14 bg-primary text-text-main text-base font-bold shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200">
+<span>Checkout</span>
+<span class="material-symbols-outlined" style="font-size: 20px;">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>

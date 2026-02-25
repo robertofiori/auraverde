@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Succulent Product Detail</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec37",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102213",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2c1e",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "3xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased text-gray-900 dark:text-gray-100 transition-colors duration-200">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden pb-24">
+<!-- Top Navigation (Absolute Overlay) -->
+<header class="absolute top-0 left-0 right-0 z-30 flex items-center justify-between p-4 pt-12 md:pt-6 bg-gradient-to-b from-black/40 to-transparent">
+<button class="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-md text-white transition hover:bg-white/30">
+<span class="material-symbols-outlined" style="font-size: 24px;">arrow_back</span>
+</button>
+<div class="flex gap-3">
+<button class="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-md text-white transition hover:bg-white/30">
+<span class="material-symbols-outlined" style="font-size: 24px;">share</span>
+</button>
+<button class="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-md text-white transition hover:bg-white/30">
+<span class="material-symbols-outlined" style="font-size: 24px;">favorite</span>
+</button>
+</div>
+</header>
+<!-- Hero Image Carousel -->
+<div class="relative w-full h-[55vh] lg:h-[60vh] shrink-0 bg-gray-200 dark:bg-gray-800">
+<div class="flex h-full w-full overflow-x-auto snap-x snap-mandatory no-scrollbar">
+<!-- Image 1 -->
+<div class="w-full h-full flex-shrink-0 snap-center bg-cover bg-center" data-alt="Close up of a green Echeveria Elegans succulent with soft lighting" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCl1PbCTxrlaE7pEruvJOQxJ5tUTcjKEF_02AzWoymVaYvs0Ovl7QkCTx1FQ9H5l6mJ52mzxaHpxLuvk0JLf8hi0o5woDAWteHyfn2llrEYjH5_T68-QjeI70gNsSGsobixmjG4JimURPBOgwKpqJ1L-crt7iY8VEYHKbyarjcDFpVHu6Dxe0gKqqMW7da-18nA4KutjIPBweLnYKM7Vt0b77Y-FGavPnshY5xkJu1iP3yOlAhuoPF34_F4SbBNBKL_oySrNO6SMc-R');">
+</div>
+<!-- Image 2 -->
+<div class="w-full h-full flex-shrink-0 snap-center bg-cover bg-center" data-alt="Top down view of a succulent in a pot" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCuY7QxGKSvGhbFRzbkGtulD2u7Psublmti16mSU8kZsE6aUV9If6NxqojSmoRTxWFigxwPT6pXidri_fsVRdIMkYOTnj8lZyHI7OiJLAB2B1N0UtcN7iaCIOIUWS9rp27IDdjmsHiFWvAPuQDDXli0LxKv4GPwVWPf3Gy2oZKcci5XLn0aIqN1-mPTxlXniPGQTbFt8rkDQoXPRyJZDlNo-R9jBujDSQuGXGKmxYNmncO_l9ownA47ae4seQBQB38mqYtxM_jYfw2d');">
+</div>
+<!-- Image 3 -->
+<div class="w-full h-full flex-shrink-0 snap-center bg-cover bg-center" data-alt="Multiple succulents arranged on a wooden table" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAGXhWok4OUvX4iyx4FJIEYtnxFa3F6f0oD_SLqYD7yfL0c8tjOhq-3GNYEnwrYHRuIR4WqdVRbUg9aXGcYZzF6D1c7PWCg3ch5HWRX_3NPf1ppuMbgKTRy_L4jJRS5fQ95lLU5xm9mFpkIT1Fk1YbQ13yn17TEsACCFVAFnaT-CfD-wHAc6IwooJw9h3FNjKYcnrKtqjmERnszMvv7oT64eaxsWtxkycbrc-7ZwRTwjAxekxxmFPz4OyJEFtAaF93CfeZqU1R29KS0');">
+</div>
+</div>
+<!-- Pagination Dots -->
+<div class="absolute bottom-10 left-0 right-0 flex justify-center gap-2">
+<div class="h-1.5 w-6 rounded-full bg-primary shadow-sm"></div>
+<div class="h-1.5 w-1.5 rounded-full bg-white/60"></div>
+<div class="h-1.5 w-1.5 rounded-full bg-white/60"></div>
+</div>
+</div>
+<!-- Content Sheet -->
+<main class="relative z-10 -mt-6 flex flex-1 flex-col rounded-t-3xl bg-background-light dark:bg-background-dark px-6 pt-8 shadow-[0_-4px_20px_rgba(0,0,0,0.1)]">
+<!-- Title & Rating -->
+<div class="mb-6 flex flex-col gap-2">
+<div class="flex items-start justify-between">
+<div>
+<h1 class="text-3xl font-bold text-gray-900 dark:text-white leading-tight">Echeveria Elegans</h1>
+<p class="text-lg italic text-gray-500 dark:text-gray-400 mt-1">Mexican Snowball</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-2xl font-bold text-primary">$12.00</span>
+</div>
+</div>
+<div class="flex items-center gap-1.5 mt-2">
+<span class="material-symbols-outlined text-yellow-400 fill-current" style="font-variation-settings: 'FILL' 1; font-size: 20px;">star</span>
+<span class="text-sm font-bold text-gray-900 dark:text-white">4.8</span>
+<span class="text-sm text-gray-500 dark:text-gray-400">(120 reviews)</span>
+</div>
+</div>
+<!-- Variant Selector -->
+<div class="mb-8">
+<h3 class="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Choose Pot Size</h3>
+<div class="flex gap-3 overflow-x-auto no-scrollbar pb-1">
+<button class="group relative flex min-w-[80px] cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border border-transparent bg-primary px-4 py-3 text-black shadow-sm transition-all active:scale-95">
+<span class="text-sm font-bold">Small</span>
+<span class="text-xs font-medium opacity-80">2"</span>
+<!-- Checkmark for selected -->
+<div class="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black text-white">
+<span class="material-symbols-outlined" style="font-size: 14px;">check</span>
+</div>
+</button>
+<button class="group flex min-w-[80px] cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark px-4 py-3 text-gray-600 dark:text-gray-300 transition-all hover:border-primary/50 active:scale-95">
+<span class="text-sm font-bold">Medium</span>
+<span class="text-xs font-medium opacity-60">4"</span>
+</button>
+<button class="group flex min-w-[80px] cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border border-gray-200 dark:border-gray-700 bg-surface-light dark:bg-surface-dark px-4 py-3 text-gray-600 dark:text-gray-300 transition-all hover:border-primary/50 active:scale-95">
+<span class="text-sm font-bold">Large</span>
+<span class="text-xs font-medium opacity-60">6"</span>
+</button>
+</div>
+</div>
+<!-- Description -->
+<div class="mb-8">
+<h3 class="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Description</h3>
+<p class="text-base leading-relaxed text-gray-600 dark:text-gray-300">
+                    Echeveria Elegans is a classic succulent with tight, pale blue-green rosettes that resemble an artichoke. It offsets freely to form a dense carpet of rosettes. Perfect for windowsills or rock gardens.
+                    <span class="font-bold text-primary cursor-pointer ml-1">Read more</span>
+</p>
+</div>
+<!-- Care Tips -->
+<div class="mb-8">
+<h3 class="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Care Instructions</h3>
+<div class="grid grid-cols-3 gap-3">
+<div class="flex flex-col items-center gap-2 rounded-2xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+<div class="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-500">
+<span class="material-symbols-outlined">wb_sunny</span>
+</div>
+<div class="text-center">
+<span class="block text-xs font-bold text-gray-900 dark:text-white">Light</span>
+<span class="block text-[10px] text-gray-500">Bright</span>
+</div>
+</div>
+<div class="flex flex-col items-center gap-2 rounded-2xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+<div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-500">
+<span class="material-symbols-outlined">water_drop</span>
+</div>
+<div class="text-center">
+<span class="block text-xs font-bold text-gray-900 dark:text-white">Water</span>
+<span class="block text-[10px] text-gray-500">Minimal</span>
+</div>
+</div>
+<div class="flex flex-col items-center gap-2 rounded-2xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+<div class="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 text-red-500">
+<span class="material-symbols-outlined">thermostat</span>
+</div>
+<div class="text-center">
+<span class="block text-xs font-bold text-gray-900 dark:text-white">Temp</span>
+<span class="block text-[10px] text-gray-500">Warm</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Shipping Accordion (Visual) -->
+<div class="mb-4 rounded-xl bg-surface-light dark:bg-surface-dark p-4 border border-gray-100 dark:border-gray-800 flex items-center justify-between cursor-pointer">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-gray-500">local_shipping</span>
+<span class="font-bold text-sm text-gray-900 dark:text-white">Shipping &amp; Delivery</span>
+</div>
+<span class="material-symbols-outlined text-gray-400">expand_more</span>
+</div>
+<!-- Just some extra space at bottom before sticky footer kicks in visually -->
+<div class="h-6"></div>
+</main>
+<!-- Sticky Bottom Bar -->
+<div class="fixed bottom-0 left-0 right-0 z-40 border-t border-gray-100 dark:border-gray-800 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-lg pb-safe pt-4 px-6 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+<div class="mb-4 flex items-center justify-center pb-6 md:pb-0">
+<div class="flex w-full max-w-md items-center justify-between gap-6">
+<!-- Quantity Stepper -->
+<div class="flex items-center gap-3 rounded-lg bg-gray-100 dark:bg-gray-800 p-1">
+<button class="flex h-8 w-8 items-center justify-center rounded-md bg-white dark:bg-gray-700 shadow-sm transition active:scale-95 text-gray-900 dark:text-white">
+<span class="material-symbols-outlined" style="font-size: 18px;">remove</span>
+</button>
+<span class="w-4 text-center text-sm font-bold text-gray-900 dark:text-white">1</span>
+<button class="flex h-8 w-8 items-center justify-center rounded-md bg-white dark:bg-gray-700 shadow-sm transition active:scale-95 text-gray-900 dark:text-white">
+<span class="material-symbols-outlined" style="font-size: 18px;">add</span>
+</button>
+</div>
+<!-- Add to Cart Button -->
+<button class="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary h-12 px-6 text-black shadow-lg shadow-primary/30 transition-all hover:bg-primary/90 active:scale-95">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="text-base font-bold">Add to Cart</span>
+<span class="ml-1 text-sm font-bold opacity-80">| $12.00</span>
+</button>
+</div>
+</div>
+<!-- Safe area spacer for iOS home indicator -->
+<div class="h-[env(safe-area-inset-bottom)]"></div>
+</div>
+</div>
+</body></html>
