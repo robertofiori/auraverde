@@ -154,34 +154,6 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        {/* Variant Selector */}
-        {(product.potPequeña || product.potMediana || product.potGrande) && (
-          <div className="mb-8">
-            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Tamaño de Maceta</h3>
-            <div className="flex gap-3 overflow-x-auto hide-scrollbar pb-1">
-              {[
-                { id: 'pequena', name: 'Pequeña', val: product.potPequeña },
-                { id: 'mediana', name: 'Mediana', val: product.potMediana },
-                { id: 'grande', name: 'Grande', val: product.potGrande }
-              ].filter(p => p.val).map((size) => (
-                <button
-                  key={size.id}
-                  className={`group relative flex min-w-[80px] cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border px-4 py-3 transition-all active:scale-95
-                    ${product.potDefault === size.id ? 'bg-primary border-transparent text-black shadow-sm' : 'bg-surface-light dark:bg-surface-dark border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300'}
-                  `}
-                >
-                  <span className="text-sm font-bold">{size.name}</span>
-                  <span className="text-xs font-medium opacity-80">{size.val}</span>
-                  {product.potDefault === size.id && (
-                    <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black text-white">
-                      <span className="material-symbols-outlined text-[14px]">check</span>
-                    </div>
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Description */}
         <div className="mb-8">
@@ -230,6 +202,41 @@ export default function ProductDetail() {
                   </div>
                 </div>
               )}
+            </div>
+
+            {/* Pot Sizes Section moved under Care */}
+            <div className="mt-8">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4 text-center">Tamaño Seleccionado</h3>
+              <div className="flex justify-center gap-3">
+                {[
+                  { id: 'pequena', name: 'Pequeña', icon: 'eco', val: product.potPequeña },
+                  { id: 'mediana', name: 'Mediana', icon: 'nature', val: product.potMediana },
+                  { id: 'grande', name: 'Grande', icon: 'forest', val: product.potGrande }
+                ].map((size) => (
+                  <div
+                    key={size.id}
+                    className={`flex flex-col items-center gap-2 rounded-2xl p-4 border transition-all duration-500 w-1/3
+                      ${product.potDefault === size.id
+                        ? 'bg-primary border-primary shadow-lg shadow-primary/20 text-black scale-105 z-10'
+                        : 'bg-surface-light dark:bg-surface-dark border-gray-100 dark:border-gray-800 text-gray-400 opacity-30'}
+                    `}
+                  >
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-full 
+                      ${product.potDefault === size.id ? 'bg-black/10' : 'bg-gray-100 dark:bg-gray-800'}
+                    `}>
+                      <span className="material-symbols-outlined text-xl">{size.icon}</span>
+                    </div>
+                    <div className="text-center">
+                      <span className="block text-[10px] font-black uppercase tracking-tight">{size.name}</span>
+                    </div>
+                    {product.potDefault === size.id && (
+                      <div className="absolute top-1 right-1">
+                        <span className="material-symbols-outlined text-xs font-black">check_circle</span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}

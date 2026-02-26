@@ -396,30 +396,25 @@ export default function AdminDashboard() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                                     {/* Pot Sizes */}
                                     <div className="space-y-3">
-                                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Tamaños de Maceta (Texto opcional)</label>
-                                        <div className="space-y-2">
+                                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">Tamaños de Maceta</label>
+                                        <div className="flex gap-2 p-1 bg-gray-50 dark:bg-white/5 rounded-2xl border border-gray-100 dark:border-white/5">
                                             {[
-                                                { id: 'pequena', label: 'Pequeña', field: 'potPequeña' },
-                                                { id: 'mediana', label: 'Mediana', field: 'potMediana' },
-                                                { id: 'grande', label: 'Grande', field: 'potGrande' }
-                                            ].map(item => (
-                                                <div key={item.id} className="flex items-center gap-2">
-                                                    <span className="text-[10px] font-bold text-slate-400 w-16">{item.label}:</span>
-                                                    <input
-                                                        placeholder={`Ej. 2"`}
-                                                        value={formData[item.field]}
-                                                        onChange={e => setFormData({ ...formData, [item.field]: e.target.value })}
-                                                        className="flex-1 p-2 bg-gray-50 dark:bg-black border border-gray-100 dark:border-gray-800 rounded-xl text-xs"
-                                                    />
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => setFormData({ ...formData, potDefault: item.id })}
-                                                        className={`p-2 rounded-lg transition-all ${formData.potDefault === item.id ? 'bg-primary text-black' : 'bg-gray-100 dark:bg-white/5 text-slate-400'}`}
-                                                        title="Marcar como seleccionada"
-                                                    >
-                                                        <span className="material-symbols-outlined text-sm">check</span>
-                                                    </button>
-                                                </div>
+                                                { id: 'pequena', label: 'Pequeña' },
+                                                { id: 'mediana', label: 'Mediana' },
+                                                { id: 'grande', label: 'Grande' }
+                                            ].map(size => (
+                                                <button
+                                                    key={size.id}
+                                                    type="button"
+                                                    onClick={() => setFormData({ ...formData, potDefault: size.id })}
+                                                    className={`flex-1 py-3 px-2 rounded-xl text-[10px] font-black uppercase transition-all border-2
+                                                        ${formData.potDefault === size.id
+                                                            ? 'bg-white dark:bg-black border-primary scale-[1.02] shadow-sm z-10'
+                                                            : 'border-transparent opacity-60 hover:opacity-100'}
+                                                    `}
+                                                >
+                                                    {size.label}
+                                                </button>
                                             ))}
                                         </div>
                                     </div>

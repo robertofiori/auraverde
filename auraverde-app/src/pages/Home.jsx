@@ -14,8 +14,10 @@ export default function Home() {
     // Get products independently or pass from a parent context if we wanted to optimize
     const { products, loading } = useProducts();
 
-    // Get first 4 products for featured section (once loaded)
-    const featuredProducts = products.slice(0, 4);
+    // Get products with 'nuevo' or 'oferta' badges for featured section
+    const featuredProducts = products
+        .filter(p => p.badge === 'nuevo' || p.badge === 'oferta')
+        .slice(0, 4);
 
     return (
         <div className="flex flex-col min-h-screen">
