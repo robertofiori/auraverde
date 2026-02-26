@@ -247,19 +247,19 @@ export default function ProductDetail() {
       {/* Sticky Bottom Bar */}
       <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-gray-100 dark:border-gray-800 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-lg pb-safe pt-4 px-6 shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
         <div className="mb-4 flex items-center justify-center pb-6 md:pb-0">
-          <div className="flex w-full max-w-md items-center justify-between gap-6">
+          <div className="flex w-full items-center justify-between gap-3">
             {/* Quantity Stepper */}
-            <div className="flex items-center gap-3 rounded-lg bg-gray-100 dark:bg-gray-800 p-1">
+            <div className="flex items-center gap-2 rounded-xl bg-gray-100 dark:bg-gray-800 p-1">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="flex h-8 w-8 items-center justify-center rounded-md bg-white dark:bg-gray-700 shadow-sm transition active:scale-95 text-gray-900 dark:text-white"
+                className="flex h-8 w-8 items-center justify-center rounded-lg bg-white dark:bg-gray-700 shadow-sm transition active:scale-95 text-gray-900 dark:text-white"
               >
                 <span className="material-symbols-outlined text-[18px]">remove</span>
               </button>
-              <span className="w-4 text-center text-sm font-bold text-gray-900 dark:text-white">{quantity}</span>
+              <span className="w-5 text-center text-sm font-black text-gray-900 dark:text-white">{quantity}</span>
               <button
                 onClick={() => setQuantity(quantity + 1)}
-                className="flex h-8 w-8 items-center justify-center rounded-md bg-white dark:bg-gray-700 shadow-sm transition active:scale-95 text-gray-900 dark:text-white"
+                className="flex h-8 w-8 items-center justify-center rounded-lg bg-white dark:bg-gray-700 shadow-sm transition active:scale-95 text-gray-900 dark:text-white"
               >
                 <span className="material-symbols-outlined text-[18px]">add</span>
               </button>
@@ -267,11 +267,13 @@ export default function ProductDetail() {
             {/* Add to Cart Button */}
             <button
               onClick={handleAddToCart}
-              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary h-12 px-6 text-black shadow-lg shadow-primary/30 transition-all hover:bg-primary/90 active:scale-95"
+              className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-primary py-3 px-3 text-black shadow-lg shadow-primary/30 transition-all hover:bg-primary/90 active:scale-95 min-h-[48px]"
             >
-              <span className="material-symbols-outlined">shopping_bag</span>
-              <span className="text-base font-bold">Agregar al Carrito</span>
-              <span className="ml-1 text-sm font-bold opacity-80">| ${(product.price * quantity).toFixed(2)}</span>
+              <span className="material-symbols-outlined text-[20px]">shopping_bag</span>
+              <div className="flex flex-wrap items-center justify-center gap-x-1">
+                <span className="text-[13px] sm:text-base font-black uppercase tracking-tight">Agregar</span>
+                <span className="text-[11px] sm:text-sm font-bold opacity-80 whitespace-nowrap">| ${(product.price * quantity).toFixed(2)}</span>
+              </div>
             </button>
           </div>
         </div>
