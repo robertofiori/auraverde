@@ -25,7 +25,7 @@ export default function Header({ title = "Catálogo", showSearch = true, onSearc
           className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 flex flex-col items-center group z-[100]"
           title="Ir al Inicio"
         >
-          <h1 className="text-xl md:text-4xl font-varela font-black tracking-[0.15em] md:tracking-[0.2em] text-primary dark:text-primary transition-all duration-300 drop-shadow-[0_0_15px_rgba(19,236,55,0.3)] hover:scale-105 active:scale-95 uppercase whitespace-nowrap">
+          <h1 className="text-xl md:text-4xl font-sans font-black tracking-tight text-primary dark:text-primary transition-all duration-300 drop-shadow-[0_0_15px_rgba(19,236,55,0.3)] hover:scale-105 active:scale-95 uppercase whitespace-nowrap">
             Aura Verde
           </h1>
         </Link>
