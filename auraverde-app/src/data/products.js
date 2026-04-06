@@ -49,4 +49,4 @@ export const products = [
   }
 ];
 
-export const filters = ["Todos", "Dracaena", "Bonsai", "Suculentas", "Palmas"];
+export const filters = ["Todos", "Exterior", "Interior", "Luz Directa", "Directa", "Indirecta", "Pequeña", "Mediana", "Grande"];

@@ -16,16 +16,24 @@ export default function Catalog() {
 
   const [searchParams] = useSearchParams();
   const isOfertasMode = searchParams.get('badge') === 'oferta';
-
   const filteredProducts = products.filter(p => {
     // Si estamos en la vista de ofertas, debe tener el badge 'oferta'
     if (isOfertasMode && (!p.badge || p.badge.toLowerCase() !== 'oferta')) {
       return false;
     }
 
-    const matchesFilter = activeFilter === "Todos" || p.type.includes(activeFilter) || p.name.includes(activeFilter);
-    const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.type.toLowerCase().includes(searchTerm.toLowerCase());
+    const filterLower = activeFilter.toLowerCase();
+    const searchLower = searchTerm.toLowerCase();
+
+    const matchesFilter = activeFilter === "Todos" || 
+      p.name.toLowerCase().includes(filterLower) || 
+      p.type.toLowerCase().includes(filterLower) ||
+      (p.description && p.description.toLowerCase().includes(filterLower));
+
+    const matchesSearch = p.name.toLowerCase().includes(searchLower) ||
+      p.type.toLowerCase().includes(searchLower) ||
+      (p.description && p.description.toLowerCase().includes(searchLower));
+      
     return matchesFilter && matchesSearch;
   });
 
