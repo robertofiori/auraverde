@@ -25,7 +25,7 @@ export default function Home() {
                 <Header title="Inicio" showSearch={false} />
             </div>
             {/* Hero Section */}
-            <section className="relative h-[500px] w-full bg-surface-light dark:bg-surface-dark overflow-hidden flex items-center justify-center text-center px-4">
+            <section className="relative min-h-[600px] md:h-[700px] w-full bg-surface-light dark:bg-surface-dark overflow-hidden flex items-center justify-center text-center px-4 pt-20 pb-32 md:pb-20">
                 {/* Background Image/Gradient Decor */}
                 <div className="absolute inset-0 z-0 opacity-20 dark:opacity-10 bg-[url('https://images.unsplash.com/photo-1470058869958-2a77ade41c02?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center"></div>
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background-light dark:to-background-dark z-0"></div>
@@ -34,7 +34,7 @@ export default function Home() {
                     <div className="inline-block px-4 py-1.5 rounded-full bg-emerald-100/80 dark:bg-primary/10 border border-emerald-200/50 dark:border-primary/20 text-emerald-800 dark:text-primary font-bold text-sm uppercase tracking-wider mb-2 backdrop-blur-sm">
                         Nueva Colección 2026
                     </div>
-                    <h1 className="text-5xl md:text-8xl font-black text-slate-900 dark:text-white leading-[1.1] tracking-tight">
+                    <h1 className="text-4xl md:text-8xl font-black text-slate-900 dark:text-white leading-[1.2] md:leading-[1.1] tracking-tight">
                         Lleva la <span className="text-gradient">Naturaleza</span> a Casa
                     </h1>
                     <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed">

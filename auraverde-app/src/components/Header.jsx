@@ -7,7 +7,7 @@ export default function Header({ title = "Catálogo", showSearch = true, onSearc
 
   return (
     <>
-      <header className="relative flex items-center justify-between px-6 py-4 bg-background-light dark:bg-background-dark z-10 shrink-0 gap-4 h-24">
+      <header className="relative flex items-center justify-between px-4 md:px-6 py-4 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md sticky top-0 z-[100] shrink-0 gap-2 md:gap-4 h-20 md:h-24 transition-all">
         
         {/* Left side: Theme Toggle & Admin */}
         <div className="flex items-center gap-2 md:gap-4 shrink-0 z-10">
@@ -25,7 +25,7 @@ export default function Header({ title = "Catálogo", showSearch = true, onSearc
           className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 flex flex-col items-center group z-[100]"
           title="Ir al Inicio"
         >
-          <h1 className="text-2xl md:text-4xl font-varela font-black tracking-[0.2em] text-primary dark:text-primary transition-all duration-300 drop-shadow-[0_0_15px_rgba(19,236,55,0.3)] hover:scale-105 active:scale-95 uppercase whitespace-nowrap">
+          <h1 className="text-xl md:text-4xl font-varela font-black tracking-[0.15em] md:tracking-[0.2em] text-primary dark:text-primary transition-all duration-300 drop-shadow-[0_0_15px_rgba(19,236,55,0.3)] hover:scale-105 active:scale-95 uppercase whitespace-nowrap">
             Aura Verde
           </h1>
         </Link>
