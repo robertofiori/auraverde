@@ -154,11 +154,6 @@ export default function ProductDetail() {
               <span className="text-3xl font-black text-primary drop-shadow-sm">${product.price.toFixed(2)}</span>
             </div>
           </div>
-          <div className="flex items-center gap-1.5 mt-2">
-            <span className="material-symbols-outlined text-yellow-400 fill-current text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
-            <span className="text-sm font-bold text-gray-900 dark:text-white">4.8</span>
-            <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">(120 reseñas verificadas)</span>
-          </div>
         </div>
 
 

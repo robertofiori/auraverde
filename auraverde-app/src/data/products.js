@@ -50,5 +50,3 @@ export const products = [
     isNew: false
   }
 ];
-
-export const filters = ["Todos", "Exterior", "Interior", "Luz Directa", "Luz Indirecta", "Pequeña", "Mediana", "Grande"];

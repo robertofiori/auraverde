@@ -2,14 +2,11 @@ import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Header from '../components/Header';
 import ProductCard from '../components/ProductCard';
-import FilterChip from '../components/FilterChip';
-import { filters } from '../data/products';
 import { useCart } from '../context/CartContext';
 import { useProducts } from '../hooks/useProducts';
 
 export default function Catalog() {
   // State for filtering and search
-  const [activeFilter, setActiveFilter] = useState("Todos");
   const [searchTerm, setSearchTerm] = useState("");
   const { addToCart } = useCart();
   const { products, loading, error } = useProducts();
@@ -26,19 +23,12 @@ export default function Catalog() {
     const normalize = (str) => 
       str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : "";
 
-    const filterNorm = normalize(activeFilter);
     const searchNorm = normalize(searchTerm);
-
-    const matchesFilter = activeFilter === "Todos" || 
-      normalize(p.name).includes(filterNorm) || 
-      normalize(p.type).includes(filterNorm) ||
-      normalize(p.description).includes(filterNorm);
-
     const matchesSearch = normalize(p.name).includes(searchNorm) ||
       normalize(p.type).includes(searchNorm) ||
       normalize(p.description).includes(searchNorm);
       
-    return matchesFilter && matchesSearch;
+    return matchesSearch;
   });
 
   if (loading) {
@@ -73,23 +63,6 @@ export default function Catalog() {
         </p>
       </div>
 
-      {/* Filters (Search moved to Header) */}
-      <div className="pl-6 py-4 shrink-0 md:pl-0">
-        <div className="flex gap-3 overflow-x-auto hide-scrollbar pr-6 items-center">
-          <button className="flex shrink-0 h-10 w-10 items-center justify-center rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-md transition-transform hover:scale-105">
-            <span className="material-symbols-outlined text-[20px]">tune</span>
-          </button>
-
-          {filters.map((filter) => (
-            <FilterChip
-              key={filter}
-              label={filter}
-              active={activeFilter === filter}
-              onClick={() => setActiveFilter(filter)}
-            />
-          ))}
-        </div>
-      </div>
 
       {/* Product Grid */}
       <div className="flex-1 overflow-y-auto px-6 pb-24 md:pb-8 hide-scrollbar md:px-0">
