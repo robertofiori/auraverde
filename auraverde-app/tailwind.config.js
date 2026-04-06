@@ -15,8 +15,8 @@ export default {
         "surface-dark": "#0f172a", // Slate 900 - Slightly lighter for cards
       },
       fontFamily: {
-        "display": ["Outfit", "sans-serif"],
-        "sans": ["Inter", "sans-serif"],
+        "display": ["Quicksand", "sans-serif"],
+        "sans": ["Nunito", "sans-serif"],
         "varela": ["Varela Round", "sans-serif"]
       },
       borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
