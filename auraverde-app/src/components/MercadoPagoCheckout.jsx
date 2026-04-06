@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
 
-const PUBLIC_KEY = 'APP_USR-ba40ce42-cf76-493a-89e2-d548df4447d4'; // Replace with YOUR Public Key
+const PUBLIC_KEY = import.meta.env.VITE_MP_PUBLIC_KEY;
 
 export default function MercadoPagoCheckout({ orderId, total, items, shippingCost }) {
     const [preferenceId, setPreferenceId] = useState(null);

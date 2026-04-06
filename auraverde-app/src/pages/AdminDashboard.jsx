@@ -11,7 +11,8 @@ export default function AdminDashboard() {
     const { orders, loading: loadingOrders, updateOrderStatus } = useAdminOrders();
     const navigate = useNavigate();
 
-    const [activeTab, setActiveTab] = useState('inventory'); // inventory, sales, orders
+    const [activeTab, setActiveTab] = useState('inventory'); // inventory, sales, orders, settings
+    const [settings, setSettings] = useState({ shippingEnabled: true });
     const [products, setProducts] = useState([]);
     const [loadingProducts, setLoadingProducts] = useState(true);
     const [submitting, setSubmitting] = useState(false);
@@ -83,11 +84,44 @@ export default function AdminDashboard() {
         }
     };
 
+    // Fetch Global Settings
+    const fetchSettings = async () => {
+        try {
+            const docSnap = await getDocs(collection(db, "settings"));
+            const shippingSetting = docSnap.docs.find(d => d.id === 'shipping');
+            if (shippingSetting) {
+                setSettings({ shippingEnabled: shippingSetting.data().enabled ?? true });
+            } else {
+                // Initialize if not exists
+                await setDoc(doc(db, "settings", "shipping"), { enabled: true });
+                setSettings({ shippingEnabled: true });
+            }
+        } catch (error) {
+            console.error("Error fetching settings:", error);
+        }
+    };
+
     useEffect(() => {
         if (userRole === 'admin') {
             fetchProducts();
+            fetchSettings();
         }
     }, [userRole]);
+
+    const handleToggleShipping = async () => {
+        const newValue = !settings.shippingEnabled;
+        setSubmitting(true);
+        try {
+            await setDoc(doc(db, "settings", "shipping"), { enabled: newValue }, { merge: true });
+            setSettings({ ...settings, shippingEnabled: newValue });
+            showToast?.(newValue ? "Cobro de envío activado" : "Cobro de envío desactivado", "info");
+        } catch (error) {
+            console.error("Error toggling shipping:", error);
+            alert("Error al actualizar configuración");
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
     const handleDeleteProduct = async (productId) => {
         try {
@@ -302,13 +336,18 @@ export default function AdminDashboard() {
 
             {/* Tabs */}
             <div className="flex gap-2 mb-6 border-b border-gray-100 dark:border-gray-800 pb-px overflow-x-auto">
-                {['inventory', 'orders', 'sales'].map(tab => (
+                {[
+                    { id: 'inventory', label: 'Inventario' },
+                    { id: 'orders', label: 'Pedidos' },
+                    { id: 'sales', label: 'Ventas y Ganancias' },
+                    { id: 'settings', label: 'Configuración' }
+                ].map(tab => (
                     <button
-                        key={tab}
-                        onClick={() => setActiveTab(tab)}
-                        className={`px-6 py-3 font-bold text-sm transition-all rounded-t-xl ${activeTab === tab ? 'bg-primary text-black' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'}`}
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`px-6 py-3 font-bold text-sm transition-all rounded-t-xl whitespace-nowrap ${activeTab === tab.id ? 'bg-primary text-black' : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'}`}
                     >
-                        {tab === 'inventory' ? 'Inventario' : tab === 'orders' ? 'Pedidos' : 'Ventas y Ganancias'}
+                        {tab.label}
                     </button>
                 ))}
             </div>
@@ -578,6 +617,47 @@ export default function AdminDashboard() {
                                 <p className="text-sm font-bold text-slate-500">Crecimiento</p>
                                 <p className="text-4xl font-black text-primary">+{stats.totalSales}</p>
                                 <p className="text-xs text-slate-400">Pedidos capturados</p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {activeTab === 'settings' && (
+                    <div className="max-w-2xl mx-auto animate-fade-in">
+                        <div className="bg-white dark:bg-surface-dark p-8 rounded-[2rem] border border-gray-100 dark:border-white/5 shadow-xl">
+                            <h2 className="text-2xl font-black mb-8 flex items-center gap-3">
+                                <span className="material-symbols-outlined text-primary p-3 bg-primary/10 rounded-2xl">settings</span>
+                                Ajustes Globales
+                            </h2>
+
+                            <div className="flex flex-col gap-6">
+                                {/* Shipping Toggle Setting */}
+                                <div className="flex items-center justify-between p-6 bg-gray-50 dark:bg-white/5 rounded-3xl border border-gray-100 dark:border-white/5 transition-all hover:shadow-md">
+                                    <div className="flex-1">
+                                        <h3 className="font-bold text-slate-900 dark:text-white text-lg">Cobrar Envío</h3>
+                                        <p className="text-sm text-slate-500 dark:text-gray-400 mt-1 max-w-xs">
+                                            {settings.shippingEnabled 
+                                                ? "El sistema calculará automáticamente el costo de envío según la distancia." 
+                                                : "El envío será GRATIS para todos los pedidos, sin importar la distancia."}
+                                        </p>
+                                    </div>
+                                    <button
+                                        onClick={handleToggleShipping}
+                                        disabled={submitting}
+                                        className={`relative inline-flex h-8 w-14 items-center rounded-full transition-all duration-300 focus:outline-none ${settings.shippingEnabled ? 'bg-primary' : 'bg-gray-300 dark:bg-white/10'}`}
+                                    >
+                                        <span className={`inline-block size-6 transform rounded-full bg-white transition duration-200 shadow-md ${settings.shippingEnabled ? 'translate-x-7' : 'translate-x-1'}`} />
+                                    </button>
+                                </div>
+
+                                <div className="p-4 bg-blue-50 dark:bg-blue-900/10 rounded-2xl border border-blue-100 dark:border-blue-900/30">
+                                    <div className="flex items-start gap-3">
+                                        <span className="material-symbols-outlined text-blue-500 mt-0.5">info</span>
+                                        <p className="text-xs text-blue-700 dark:text-blue-400 leading-relaxed">
+                                            <b>Nota:</b> Los cambios se aplican de forma inmediata a todos los usuarios. Si desactivas el envío, aparecerá como "Gratis" en el proceso de compra.
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

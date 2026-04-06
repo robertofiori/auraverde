@@ -1,5 +1,7 @@
-// Reference: Hector Plano 58, Bahia Blanca
 // Coordinates for Hector Plano 58, Bahia Blanca, Argentina
+import { db } from '../firebase/config';
+import { doc, getDoc } from 'firebase/firestore';
+
 const STORE_COORDS = { lat: -38.7361644, lon: -62.2874379 };
 
 // Precios (en ARS)
@@ -56,6 +58,18 @@ export async function getCoordinates(addressString) {
  * @param {number} totalItems - Item count for free shipping check
  */
 export async function calculateShippingCost(addressString, totalItems = 0) {
+    // 0. Global Shipping Toggle Check
+    try {
+        const settingsSnap = await getDoc(doc(db, "settings", "shipping"));
+        if (settingsSnap.exists() && settingsSnap.data().enabled === false) {
+            console.log("Shipping is globally disabled. Returning 0.");
+            return 0;
+        }
+    } catch (error) {
+        console.error("Error fetching global shipping settings:", error);
+        // Fallback to existing logic if settings can't be fetched
+    }
+
     // 1. Free Shipping Rule
     if (totalItems >= PRICES.FREE_THRESHOLD) {
         return 0;

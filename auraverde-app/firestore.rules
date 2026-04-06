@@ -6,7 +6,7 @@ service cloud.firestore {
     match /products/{product} {
       allow read: if true;
       allow update: if request.auth != null && (
-        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stock'])) ||
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stock']) ||
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
       );
       allow create, delete: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
@@ -24,6 +24,13 @@ service cloud.firestore {
         resource.data.userId == request.auth.uid || 
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
       );
+    }
+
+    // Ajustes Globales: Todos leen, solo admin escribe
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
     // Por defecto denegar todo

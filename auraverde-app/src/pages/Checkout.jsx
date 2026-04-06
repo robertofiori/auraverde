@@ -15,9 +15,13 @@ export default function Checkout() {
     const [orderId, setOrderId] = useState(null);
     const [paymentMethod, setPaymentMethod] = useState('mercadopago'); // 'mercadopago' or 'bank_transfer'
 
-    // Redirect if no shipping address
+    // Redirect if not logged in or no shipping address
     useEffect(() => {
-        if (currentUser && userData && !userData.shippingAddress) {
+        if (!currentUser) {
+            navigate('/login', { state: { from: '/checkout' } });
+            return;
+        }
+        if (userData && !userData.shippingAddress) {
             alert("Para que podamos enviarte tu pedido necesitamos tu direccion");
             navigate('/profile');
         }

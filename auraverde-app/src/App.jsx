@@ -11,6 +11,8 @@ import Orders from './pages/Orders';
 import Addresses from './pages/Addresses';
 import Checkout from './pages/Checkout';
 import Success from './pages/Success';
+import Failure from './pages/Failure';
+import Pending from './pages/Pending';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Migration from './pages/Migration';
@@ -39,6 +41,8 @@ function App() {
                   <Route path="/addresses" element={<Addresses />} />
                   <Route path="/checkout" element={<Checkout />} />
                   <Route path="/success" element={<Success />} />
+                  <Route path="/failure" element={<Failure />} />
+                  <Route path="/pending" element={<Pending />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/migrate" element={<Migration />} />
