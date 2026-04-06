@@ -22,17 +22,21 @@ export default function Catalog() {
       return false;
     }
 
-    const filterLower = activeFilter.toLowerCase();
-    const searchLower = searchTerm.toLowerCase();
+    // Función para quitar acentos y pasar a minúsculas
+    const normalize = (str) => 
+      str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : "";
+
+    const filterNorm = normalize(activeFilter);
+    const searchNorm = normalize(searchTerm);
 
     const matchesFilter = activeFilter === "Todos" || 
-      p.name.toLowerCase().includes(filterLower) || 
-      p.type.toLowerCase().includes(filterLower) ||
-      (p.description && p.description.toLowerCase().includes(filterLower));
+      normalize(p.name).includes(filterNorm) || 
+      normalize(p.type).includes(filterNorm) ||
+      normalize(p.description).includes(filterNorm);
 
-    const matchesSearch = p.name.toLowerCase().includes(searchLower) ||
-      p.type.toLowerCase().includes(searchLower) ||
-      (p.description && p.description.toLowerCase().includes(searchLower));
+    const matchesSearch = normalize(p.name).includes(searchNorm) ||
+      normalize(p.type).includes(searchNorm) ||
+      normalize(p.description).includes(searchNorm);
       
     return matchesFilter && matchesSearch;
   });

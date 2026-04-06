@@ -10,7 +10,8 @@ export const products = [
   {
     id: 2,
     name: "Dracaena Marg.",
-    type: "Árbol de interior",
+    type: "Árbol de interior Grande",
+    description: "Planta de gran porte con luz directa.",
     price: 45.00,
     image: "https://lh3.googleusercontent.com/aida-public/AB6AXuD57UKN04xBtoohXvHEHpARBywa8wc9eKFvD7XDp4cKqtu9QbUHhMHlIAQTqq_YH7bNSJZY_0dW3eOTEeI9MC9bd_WXnHPghUkvnYzkep7OhHBL-V9YT8ONnxMMkepRc2VuSeXjffy01QOpFPIiYTvJQwC61ojAnDKXHvEixwbL_OCVDtP5FGpHB9huUjYwZVBarcehQQXtsDxIj-0kpDwgAjMXOMgDtuAfllSqSFCXo5viLkIt76k5EhbsAZ_oBuXDEOk1HeJbKmDY",
     isNew: false
@@ -18,7 +19,8 @@ export const products = [
   {
     id: 3,
     name: "Bonsai Ficus",
-    type: "Árbol miniatura",
+    type: "Árbol miniatura Mediana",
+    description: "Bonsai de tamaño mediano que prefiere luz indirecta.",
     price: 30.00,
     image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBuQ1GGR9x_WTdo-L0S5BynKVM9VNi2KLnWCv4u1BHbfC0ie4CsUb1AH_2sDOTV1EIOAyydQTq86WSJXuVqYbuIctNrkOoDPfqY4-2WVg-VcVGxkgXgLhCeSe8AOSMdCpdWYBwJDeS9tU9OxFtysrT5GG8kDBiTbp9WeJrIwpzQIw9DsA28HoOQo78lMm95heiSA-aLd_HzAeO8wCyPlJKyYrXEE-tXalpUWPPAj2mSTuWxxzkmW5tkBvw7RQdWDU6lyq_4RCuJpbGA",
     isNew: true
@@ -49,4 +51,4 @@ export const products = [
   }
 ];
 
-export const filters = ["Todos", "Exterior", "Interior", "Luz Directa", "Directa", "Indirecta", "Pequeña", "Mediana", "Grande"];
+export const filters = ["Todos", "Exterior", "Interior", "Luz Directa", "Luz Indirecta", "Pequeña", "Mediana", "Grande"];
