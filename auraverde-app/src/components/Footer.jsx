@@ -3,7 +3,7 @@ import SocialLinks from './SocialLinks';
 
 export default function Footer() {
     return (
-        <footer className="bg-white dark:bg-background-dark border-t border-gray-100 dark:border-gray-800 py-12 px-6">
+        <footer id="footer" className="bg-white dark:bg-background-dark border-t border-gray-100 dark:border-gray-800 py-12 px-6">
             <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
 
                 {/* Brand */}

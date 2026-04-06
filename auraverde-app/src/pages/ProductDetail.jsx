@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { useProduct } from '../hooks/useProducts';
 
@@ -9,7 +9,14 @@ export default function ProductDetail() {
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [selectedSize, setSelectedSize] = useState('pequena');
   const { product, loading, error } = useProduct(id);
+
+  useEffect(() => {
+    if (product?.potDefault) {
+      setSelectedSize(product.potDefault);
+    }
+  }, [product]);
 
   if (loading) {
     return <div className="flex h-screen items-center justify-center text-primary font-bold">Cargando producto...</div>;
@@ -130,37 +137,36 @@ export default function ProductDetail() {
         {/* Title & Rating */}
         <div className="mb-6 flex flex-col gap-2">
           <div className="flex items-start justify-between">
-            <div>
+            <div className="animate-fade-in-left">
               <div className="flex items-center gap-2 mb-1">
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white leading-tight">{product.name}</h1>
                 {(product.badge || product.isNew) && (
-                  <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest text-white shadow-sm
+                  <span className={`px-2 py-1 rounded text-[10px] font-black uppercase tracking-widest text-white shadow-sm animate-pulse-slow
                     ${(product.badge === 'oferta') ? 'bg-red-500' : 'bg-emerald-500'}
                   `}>
                     {product.badge === 'oferta' ? 'Oferta' : 'Nuevo'}
                   </span>
                 )}
               </div>
-              <p className="text-lg italic text-gray-500 dark:text-gray-400">{product.type}</p>
+              <p className="text-lg italic text-gray-500 dark:text-gray-400 font-medium">{product.type}</p>
             </div>
-            <div className="flex flex-col items-end">
-              <span className="text-2xl font-bold text-primary">${product.price.toFixed(2)}</span>
+            <div className="flex flex-col items-end animate-fade-in-right">
+              <span className="text-3xl font-black text-primary drop-shadow-sm">${product.price.toFixed(2)}</span>
             </div>
           </div>
           <div className="flex items-center gap-1.5 mt-2">
             <span className="material-symbols-outlined text-yellow-400 fill-current text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
             <span className="text-sm font-bold text-gray-900 dark:text-white">4.8</span>
-            <span className="text-sm text-gray-500 dark:text-gray-400">(120 reseñas)</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">(120 reseñas verificadas)</span>
           </div>
         </div>
 
 
         {/* Description */}
         <div className="mb-8">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Descripción</h3>
-          <p className="text-base leading-relaxed text-gray-600 dark:text-gray-300">
-            {product.name} es una hermosa planta. Perfecta para agregar un toque de naturaleza a tu hogar u oficina.
-            <span className="font-bold text-primary cursor-pointer ml-1">Leer más</span>
+          <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3 border-l-4 border-primary pl-3">Sobre esta planta</h3>
+          <p className="text-base leading-relaxed text-gray-600 dark:text-gray-300 font-medium">
+            {product.description || `Esta hermosa ${product.name} es la adición perfecta para tu colección. Cuidadosamente cultivada en nuestro vivero para garantizar su salud y vitalidad. Su follaje único y resistencia la convierten en una pieza destacada para cualquier interior.`}
           </p>
         </div>
 
@@ -170,35 +176,35 @@ export default function ProductDetail() {
             <h3 className="text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3">Cuidados</h3>
             <div className="grid grid-cols-3 gap-3">
               {product.careLuz && (
-                <div className="flex flex-col items-center gap-2 rounded-2xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-gray-100 dark:border-gray-800">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-500">
+                <div className="flex flex-col items-center gap-2 rounded-2xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-gray-100 dark:border-gray-800 hover:border-orange-500/30 transition-colors">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-500 shadow-inner">
                     <span className="material-symbols-outlined">wb_sunny</span>
                   </div>
                   <div className="text-center">
                     <span className="block text-xs font-bold text-gray-900 dark:text-white">Luz</span>
-                    <span className="block text-[10px] text-gray-500">{product.careLuz}</span>
+                    <span className="block text-[10px] text-gray-500 dark:text-gray-400 font-medium">{product.careLuz}</span>
                   </div>
                 </div>
               )}
               {product.careAgua && (
-                <div className="flex flex-col items-center gap-2 rounded-2xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-gray-100 dark:border-gray-800">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-500">
+                <div className="flex flex-col items-center gap-2 rounded-2xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-gray-100 dark:border-gray-800 hover:border-blue-500/30 transition-colors">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-500 shadow-inner">
                     <span className="material-symbols-outlined">water_drop</span>
                   </div>
                   <div className="text-center">
-                    <span className="block text-xs font-bold text-gray-900 dark:text-white">Agua</span>
-                    <span className="block text-[10px] text-gray-500">{product.careAgua}</span>
+                    <span className="block text-xs font-bold text-gray-900 dark:text-white">Riego</span>
+                    <span className="block text-[10px] text-gray-500 dark:text-gray-400 font-medium">{product.careAgua}</span>
                   </div>
                 </div>
               )}
               {product.careTemp && (
-                <div className="flex flex-col items-center gap-2 rounded-2xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-gray-100 dark:border-gray-800">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 text-red-500">
+                <div className="flex flex-col items-center gap-2 rounded-2xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-gray-100 dark:border-gray-800 hover:border-red-500/30 transition-colors">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 text-red-500 shadow-inner">
                     <span className="material-symbols-outlined">thermostat</span>
                   </div>
                   <div className="text-center">
                     <span className="block text-xs font-bold text-gray-900 dark:text-white">Temp</span>
-                    <span className="block text-[10px] text-gray-500">{product.careTemp}</span>
+                    <span className="block text-[10px] text-gray-500 dark:text-gray-400 font-medium">{product.careTemp}</span>
                   </div>
                 </div>
               )}
@@ -213,28 +219,29 @@ export default function ProductDetail() {
                   { id: 'mediana', name: 'Mediana', icon: 'nature', val: product.potMediana },
                   { id: 'grande', name: 'Grande', icon: 'forest', val: product.potGrande }
                 ].map((size) => (
-                  <div
+                  <button
                     key={size.id}
-                    className={`flex flex-col items-center gap-2 rounded-2xl p-4 border transition-all duration-500 w-1/3
-                      ${product.potDefault === size.id
+                    onClick={() => setSelectedSize(size.id)}
+                    className={`relative flex flex-col items-center gap-2 rounded-2xl p-4 border transition-all duration-300 w-1/3 outline-none focus:outline-none
+                      ${selectedSize === size.id
                         ? 'bg-primary border-primary shadow-lg shadow-primary/20 text-black scale-105 z-10'
-                        : 'bg-surface-light dark:bg-surface-dark border-gray-100 dark:border-gray-800 text-gray-400 opacity-30'}
+                        : 'bg-surface-light dark:bg-surface-dark border-gray-100 dark:border-gray-800 text-gray-500 hover:border-primary/50'}
                     `}
                   >
-                    <div className={`flex h-10 w-10 items-center justify-center rounded-full 
-                      ${product.potDefault === size.id ? 'bg-black/10' : 'bg-gray-100 dark:bg-gray-800'}
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-full transition-colors
+                      ${selectedSize === size.id ? 'bg-black/10' : 'bg-gray-100 dark:bg-gray-800 group-hover:bg-primary/10'}
                     `}>
-                      <span className="material-symbols-outlined text-xl">{size.icon}</span>
+                      <span className={`material-symbols-outlined text-xl ${selectedSize === size.id ? 'text-black' : 'text-gray-500 dark:text-gray-400'}`}>{size.icon}</span>
                     </div>
                     <div className="text-center">
-                      <span className="block text-[10px] font-black uppercase tracking-tight">{size.name}</span>
+                      <span className={`block text-[10px] font-black uppercase tracking-tight ${selectedSize === size.id ? 'text-black' : 'text-gray-700 dark:text-gray-300'}`}>{size.name}</span>
                     </div>
-                    {product.potDefault === size.id && (
-                      <div className="absolute top-1 right-1">
-                        <span className="material-symbols-outlined text-xs font-black">check_circle</span>
+                    {selectedSize === size.id && (
+                      <div className="absolute top-2 right-2 text-black">
+                        <span className="material-symbols-outlined text-sm font-black" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                       </div>
                     )}
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>

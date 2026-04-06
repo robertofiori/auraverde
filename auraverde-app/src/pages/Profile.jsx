@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
-import BottomNav from '../components/BottomNav';
+// BottomNav removed from imports
 import { useAuth } from '../context/AuthContext';
 import { db, storage } from '../firebase/config';
 import { doc, updateDoc } from 'firebase/firestore';
@@ -135,8 +135,8 @@ export default function Profile() {
 
   return (
     <div className="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden md:overflow-visible bg-background-light dark:bg-background-dark pb-24 md:pb-8">
-      {/* Top App Bar - Mobile Only */}
-      <div className="md:hidden sticky top-0 z-20 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-gray-100 dark:border-white/5">
+      {/* Top App Bar */}
+      <div className="sticky top-0 z-20 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm border-b border-gray-100 dark:border-white/5">
         <Header title="Perfil" showSearch={false} />
       </div>
 
@@ -363,9 +363,7 @@ export default function Profile() {
         </div>
       </div>
 
-      <div className="md:hidden">
-        <BottomNav />
-      </div>
+      {/* BottomNav removed as it is globally rendered in MainLayout */}
     </div>
   );
 }

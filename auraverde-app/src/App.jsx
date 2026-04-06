@@ -15,6 +15,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Migration from './pages/Migration';
 import AdminDashboard from './pages/AdminDashboard';
+import ProtectedRoute from './components/ProtectedRoute';
 
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -42,7 +43,11 @@ function App() {
                   <Route path="/register" element={<Register />} />
                   <Route path="/migrate" element={<Migration />} />
                   <Route path="/favorites" element={<Favorites />} />
-                  <Route path="/admin" element={<AdminDashboard />} />
+                  
+                  {/* Rutas Privadas / Admin */}
+                  <Route element={<ProtectedRoute adminOnly={true} />}>
+                    <Route path="/admin" element={<AdminDashboard />} />
+                  </Route>
                 </Route>
               </Routes>
             </CartProvider>

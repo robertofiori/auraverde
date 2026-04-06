@@ -35,18 +35,12 @@ export default function Addresses() {
 
     return (
         <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark pb-24">
-            {/* Mobile Header */}
-            <div className="md:hidden">
+            {/* Header */}
+            <div className="mb-0">
                 <Header title="Mis Direcciones" showSearch={false} />
             </div>
 
-            {/* Desktop Header */}
-            <div className="hidden md:flex items-center gap-4 p-6 border-b border-gray-100 dark:border-white/5 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-sm sticky top-0 z-10">
-                <button onClick={() => navigate('/profile')} className="flex items-center justify-center size-10 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
-                    <span className="material-symbols-outlined text-slate-900 dark:text-white">arrow_back</span>
-                </button>
-                <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Mis Direcciones</h1>
-            </div>
+            {/* Desktop Header removed to unify UI with global Header */}
 
             <div className="p-4 md:p-8 max-w-2xl mx-auto w-full flex flex-col gap-6">
 

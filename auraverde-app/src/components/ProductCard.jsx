@@ -1,16 +1,18 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../context/ToastContext';
 
 export default function ProductCard({ id, name, type, price, image, isNew, badge, onAddToCart }) {
   const { toggleFavorite, userData } = useAuth();
+  const { showToast } = useToast();
   const isFavorite = userData?.favorites?.includes(id);
 
   // Determine which badge to show (mutually exclusive)
   const activeBadge = badge || (isNew ? 'nuevo' : null);
 
   return (
-    <div className="group flex flex-col gap-3">
-      <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden bg-slate-100 dark:bg-surface-dark">
+    <div className="group flex flex-col gap-4 animate-scale-in hover:-translate-y-2 transition-all duration-500">
+      <div className="relative w-full aspect-[3/4] rounded-[2rem] overflow-hidden bg-slate-100 dark:bg-surface-dark shadow-sm group-hover:shadow-2xl group-hover:shadow-primary/10 transition-all duration-500">
         <Link to={`/product/${id}`}>
           <img
             alt={name}
@@ -20,8 +22,8 @@ export default function ProductCard({ id, name, type, price, image, isNew, badge
         </Link>
 
         {activeBadge && activeBadge !== 'none' && (
-          <div className={`absolute top-3 left-3 px-2 py-1 text-white text-[10px] font-black uppercase tracking-wider rounded-md shadow-md z-10
-            ${activeBadge === 'nuevo' ? 'bg-emerald-500' : 'bg-red-500'}
+          <div className={`absolute top-4 left-4 px-3 py-1 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg z-10 backdrop-blur-md
+            ${activeBadge === 'nuevo' ? 'bg-emerald-500/90' : 'bg-rose-500/90'}
           `}>
             {activeBadge}
           </div>
@@ -61,11 +63,14 @@ export default function ProductCard({ id, name, type, price, image, isNew, badge
         <button
           onClick={(e) => {
             e.preventDefault();
-            onAddToCart && onAddToCart();
+            if (onAddToCart) {
+                onAddToCart();
+                showToast(`${name} añadido al carrito`, 'success');
+            }
           }}
-          className="absolute bottom-3 right-3 z-10 h-10 w-10 rounded-full bg-white/90 dark:bg-surface-dark/90 backdrop-blur-sm flex items-center justify-center text-slate-900 dark:text-white shadow-lg active:scale-90 transition-all hover:bg-primary hover:text-slate-900 cursor-pointer"
+          className="absolute bottom-4 right-4 z-10 h-12 w-12 rounded-2xl bg-white/90 dark:bg-primary/90 backdrop-blur-md flex items-center justify-center text-slate-900 shadow-xl active:scale-95 transition-all hover:scale-110 hover:bg-primary dark:hover:bg-white group/btn cursor-pointer"
         >
-          <span className="material-symbols-outlined text-[20px]">add</span>
+          <span className="material-symbols-outlined text-[24px] group-hover/btn:rotate-90 transition-transform duration-300">add</span>
         </button>
       </div>
       <div>

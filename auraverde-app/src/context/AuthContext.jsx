@@ -75,16 +75,24 @@ export function AuthProvider({ children }) {
     }
 
     useEffect(() => {
+        let unsubscribeSnapshot = null;
+
         const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
             setCurrentUser(user);
-            setLoading(true); // Keep loading true while fetching user doc
+            // No seteamos loading(true) aquí para evitar desmontar toda la app en cada cambio de auth
+
+            // Unsubscribe from previous listener if it exists
+            if (unsubscribeSnapshot) {
+                unsubscribeSnapshot();
+                unsubscribeSnapshot = null;
+            }
 
             if (user) {
                 // Real-time listener for user document
                 const userDocRef = doc(db, "users", user.uid);
 
                 // Set up the snapshot listener
-                const unsubscribeSnapshot = onSnapshot(userDocRef, (docSnap) => {
+                unsubscribeSnapshot = onSnapshot(userDocRef, (docSnap) => {
                     if (docSnap.exists()) {
                         const data = docSnap.data();
                         setUserRole(data.role);
@@ -98,9 +106,6 @@ export function AuthProvider({ children }) {
                     console.error("Error fetching user data:", error);
                     setLoading(false);
                 });
-
-                // Return cleanup for snapshot listener when auth user changes
-                return () => unsubscribeSnapshot();
             } else {
                 setUserRole(null);
                 setUserData(null);
@@ -108,7 +113,13 @@ export function AuthProvider({ children }) {
             }
         });
 
-        return () => unsubscribeAuth();
+        // Clean up both auth and snapshot listeners on component unmount
+        return () => {
+            unsubscribeAuth();
+            if (unsubscribeSnapshot) {
+                unsubscribeSnapshot();
+            }
+        };
     }, []);
 
     const value = {

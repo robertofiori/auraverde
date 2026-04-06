@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext';
 import { useToast } from '../context/ToastContext';
 
 import Header from '../components/Header';
-import Footer from '../components/Footer';
+
 
 export default function Home() {
     const navigate = useNavigate();
@@ -21,7 +21,7 @@ export default function Home() {
 
     return (
         <div className="flex flex-col min-h-screen">
-            <div className="md:hidden">
+            <div className="mb-0">
                 <Header title="Inicio" showSearch={false} />
             </div>
             {/* Hero Section */}
@@ -30,15 +30,15 @@ export default function Home() {
                 <div className="absolute inset-0 z-0 opacity-20 dark:opacity-10 bg-[url('https://images.unsplash.com/photo-1470058869958-2a77ade41c02?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center"></div>
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background-light dark:to-background-dark z-0"></div>
 
-                <div className="relative z-10 max-w-3xl flex flex-col items-center gap-6 animate-fade-in-up">
-                    <div className="inline-block px-4 py-1.5 rounded-full bg-emerald-100 dark:bg-primary/10 border border-emerald-200 dark:border-primary/20 text-emerald-800 dark:text-primary font-bold text-sm uppercase tracking-wider mb-2">
+                <div className="relative z-10 max-w-4xl flex flex-col items-center gap-6 animate-fade-in-up">
+                    <div className="inline-block px-4 py-1.5 rounded-full bg-emerald-100/80 dark:bg-primary/10 border border-emerald-200/50 dark:border-primary/20 text-emerald-800 dark:text-primary font-bold text-sm uppercase tracking-wider mb-2 backdrop-blur-sm">
                         Nueva Colección 2026
                     </div>
-                    <h1 className="text-5xl md:text-7xl font-black text-slate-900 dark:text-white leading-tight tracking-tight">
-                        Lleva la Naturaleza a <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-400">Casa</span>
+                    <h1 className="text-5xl md:text-8xl font-black text-slate-900 dark:text-white leading-[1.1] tracking-tight">
+                        Lleva la <span className="text-gradient">Naturaleza</span> a Casa
                     </h1>
-                    <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-xl leading-relaxed">
-                        Transforma tu espacio con nuestra colección curada de suculentas premium. Entregadas frescas desde nuestro vivero hasta tu puerta.
+                    <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed">
+                        Transforma tu espacio con nuestra colección curada de suculentas premium. Entregadas frescas desde nuestro vivero hasta tu puerta en un empaque diseñado para su cuidado.
                     </p>
                     <div className="flex gap-4 mt-4">
                         <button
@@ -53,8 +53,8 @@ export default function Home() {
             </section>
 
             {/* Value Propositions */}
-            <section className="py-16 px-6 bg-white dark:bg-surface-dark/50">
-                <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <section className="py-20 px-6 bg-slate-50/50 dark:bg-transparent relative overflow-hidden">
+                <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
                     {[
                         {
                             icon: "local_shipping",
@@ -88,13 +88,14 @@ export default function Home() {
                         <div
                             key={index}
                             onClick={item.action}
-                            className="flex flex-col items-center text-center p-6 rounded-3xl bg-background-light dark:bg-background-dark border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-md transition-shadow cursor-pointer hover:border-primary/30"
+                            className="glass flex flex-col items-center text-center p-8 rounded-[2rem] shadow-sm hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 cursor-pointer hover:border-primary/40 group animate-fade-in-up"
+                            style={{ animationDelay: `${index * 150}ms` }}
                         >
-                            <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 text-primary">
-                                <span className="material-symbols-outlined text-3xl">{item.icon}</span>
+                            <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center mb-6 text-primary group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-500">
+                                <span className="material-symbols-outlined text-4xl">{item.icon}</span>
                             </div>
-                            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{item.title}</h3>
-                            <p className="text-slate-500 dark:text-slate-400">{item.text}</p>
+                            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">{item.title}</h3>
+                            <p className="text-slate-500 dark:text-slate-400 leading-relaxed">{item.text}</p>
                         </div>
                     ))}
                 </div>
@@ -133,9 +134,6 @@ export default function Home() {
                 </button>
             </section>
 
-            <div className="md:hidden pb-20">
-                <Footer />
-            </div>
         </div>
     );
 }

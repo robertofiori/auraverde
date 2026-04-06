@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useToast } from '../context/ToastContext';
 import { useCart } from '../context/CartContext';
 import { useAddresses } from '../hooks/useAddresses';
 import { calculateShippingCost } from '../utils/shipping';
 import { useAuth } from '../context/AuthContext';
+import Header from '../components/Header';
 
 export default function Cart() {
   const navigate = useNavigate();
@@ -49,23 +50,13 @@ export default function Cart() {
   return (
     <div className="relative flex h-full min-h-screen w-full flex-col overflow-hidden pb-32 bg-background-light dark:bg-background-dark md:pb-0">
 
-      {/* Header (Mobile) */}
-      <header className="sticky top-0 z-10 flex items-center justify-between bg-surface-light/95 dark:bg-background-dark/95 backdrop-blur-sm p-4 pb-2 border-b border-gray-100 dark:border-gray-800 md:hidden">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex size-10 shrink-0 items-center justify-center rounded-full active:bg-gray-100 dark:active:bg-surface-dark cursor-pointer"
-        >
-          <span className="material-symbols-outlined text-text-main dark:text-white text-2xl">arrow_back_ios_new</span>
-        </button>
-        <h2 className="text-text-main dark:text-white text-lg font-bold leading-tight flex-1 text-center">Mi Carrito ({itemCount})</h2>
-        <div className="flex w-12 items-center justify-end cursor-pointer">
-        </div>
-      </header>
+      <Header showSearch={false} />
 
-      {/* Header (Desktop) */}
-      <div className="hidden md:flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Carrito de Compras</h1>
-        <span className="text-lg font-medium text-slate-500">{itemCount} items</span>
+      <div className="px-6 py-4 md:py-8">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tight">Mi Carrito</h1>
+          <span className="text-sm font-bold text-primary bg-primary/10 px-3 py-1 rounded-full">{itemCount} items</span>
+        </div>
       </div>
 
       <div className="flex flex-col md:flex-row gap-8 h-full overflow-hidden">
@@ -73,16 +64,26 @@ export default function Cart() {
         <div className="flex-1 overflow-y-auto px-4 md:px-0 hide-scrollbar">
           <div className="flex flex-col gap-4">
             {cartItems.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-64 text-center">
-                <span className="material-symbols-outlined text-6xl text-gray-300 dark:text-gray-700 mb-4">shopping_cart_off</span>
-                <p className="text-lg text-gray-500 font-medium">Tu carrito está vacío</p>
-                <button onClick={() => navigate('/catalog')} className="mt-4 text-primary font-bold hover:underline">
-                  Comenzar a Comprar
+              <div className="flex flex-col items-center justify-center py-20 text-center animate-fade-in-up">
+                <div className="w-24 h-24 rounded-full bg-slate-50 dark:bg-surface-dark border border-slate-100 dark:border-slate-800 flex items-center justify-center mb-6 shadow-inner animate-pulse-slow">
+                  <span className="material-symbols-outlined text-5xl text-slate-300 dark:text-slate-600">shopping_basket</span>
+                </div>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Tu carrito está vacío</h3>
+                <p className="text-slate-500 dark:text-slate-400 max-w-xs mb-8">Parece que aún no tienes plantas en tu carrito.</p>
+                <button 
+                  onClick={() => navigate('/catalog')} 
+                  className="px-8 py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all hover:-translate-y-0.5 active:translate-y-0"
+                >
+                  Explorar Catálogo
                 </button>
               </div>
             ) : (
-              cartItems.map(item => (
-                <div key={item.id} className="relative flex flex-col gap-4 bg-surface-light dark:bg-surface-dark p-4 rounded-xl shadow-sm border border-transparent dark:border-gray-800 md:flex-row md:items-center">
+              cartItems.map((item, index) => (
+                <div 
+                  key={item.id} 
+                  className="group relative flex flex-col gap-4 bg-white dark:bg-surface-dark p-5 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/50 md:flex-row md:items-center hover:shadow-md transition-all animate-fade-in-up"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
                   <div className="flex items-start justify-between gap-4 flex-1">
                     <div className="flex items-center gap-4 flex-1">
                       <div className="bg-center bg-no-repeat bg-cover rounded-lg aspect-square w-20 h-20 shrink-0 bg-gray-200" style={{ backgroundImage: `url("${item.image}")` }}></div>
@@ -130,8 +131,8 @@ export default function Cart() {
         {/* Checkout Section (Fixed on mobile, Side on desktop) */}
         {cartItems.length > 0 && (
           <div className="
-            fixed bottom-0 left-0 right-0 bg-surface-light dark:bg-background-dark border-t border-gray-100 dark:border-gray-800 p-4 px-6 pb-8 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] dark:shadow-none z-20 
-            md:static md:w-96 md:h-fit md:border md:rounded-2xl md:p-6 md:pb-6 md:shadow-sm
+            fixed bottom-0 left-0 right-0 glass border-t-0 p-6 pb-40 shadow-[0_-10px_40px_-20px_rgba(0,0,0,0.15)] dark:shadow-none z-20 animate-fade-in-up
+            md:static md:w-96 md:h-fit md:rounded-[2rem] md:p-8 md:pb-8 md:animate-none
           ">
             <div className="flex flex-col gap-4 max-w-md mx-auto w-full">
 
@@ -191,10 +192,10 @@ export default function Cart() {
                   </span>
                 </div>
 
-                <div className="h-px bg-gray-200 dark:bg-gray-700 my-1"></div>
-                <div className="flex justify-between items-center">
-                  <span className="text-text-main dark:text-white text-lg font-bold">Total</span>
-                  <span className="text-2xl font-black text-text-main dark:text-white leading-none">${total.toFixed(2)}</span>
+                <div className="h-px bg-slate-100 dark:bg-slate-800 my-2"></div>
+                <div className="flex justify-between items-center py-2">
+                  <span className="text-slate-900 dark:text-white text-lg font-bold">Total</span>
+                  <span className="text-3xl font-black text-gradient leading-none">${total.toFixed(2)}</span>
                 </div>
               </div>
 

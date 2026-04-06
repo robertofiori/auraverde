@@ -33,7 +33,7 @@ export default function Favorites() {
 
     return (
         <div className="flex flex-col h-full bg-background-light dark:bg-background-dark">
-            <div className="md:hidden">
+            <div className="mb-0">
                 <Header title="Favoritos" showSearch={false} />
             </div>
 

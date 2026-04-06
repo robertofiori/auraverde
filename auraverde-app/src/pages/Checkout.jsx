@@ -13,6 +13,7 @@ export default function Checkout() {
     const { currentUser, userData } = useAuth();
     const [isProcessing, setIsProcessing] = useState(false);
     const [orderId, setOrderId] = useState(null);
+    const [paymentMethod, setPaymentMethod] = useState('mercadopago'); // 'mercadopago' or 'bank_transfer'
 
     // Redirect if no shipping address
     useEffect(() => {
@@ -29,25 +30,26 @@ export default function Checkout() {
         setIsProcessing(true);
 
         try {
-            // Simulate Payment Delay
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
             const orderData = {
                 items: cartItems,
                 subtotal,
                 tax,
                 total,
-                shippingAddress: userData.shippingAddress, // Use profile address
-                paymentLast4: 'MercadoPago',
-                status: 'pending_payment',
-                date: new Date().toLocaleDateString() // Fallback string
+                shippingAddress: userData.shippingAddress,
+                paymentMethod: paymentMethod, // Store choice
+                paymentLast4: paymentMethod === 'mercadopago' ? 'MercadoPago' : 'Transferencia',
+                status: paymentMethod === 'mercadopago' ? 'pending_payment' : 'waiting_transfer',
+                date: new Date().toLocaleDateString()
             };
 
             const id = await createOrder(orderData);
             setOrderId(id);
-            // We do NOT clear cart or navigate here. 
-            // We wait for the user to proceed with MercadoPago.
-            // Clearing cart should happen on success page or webhook handling.
+
+            // If it's a bank transfer, we can go straight to success page
+            if (paymentMethod === 'bank_transfer') {
+                clearCart();
+                navigate('/success', { state: { orderId: id, paymentMethod: 'bank_transfer' } });
+            }
 
         } catch (error) {
             console.error("Checkout failed", error);
@@ -55,11 +57,6 @@ export default function Checkout() {
             setIsProcessing(false);
         }
     };
-
-    if (cartItems.length === 0 && !orderId) {
-        // Only redirect if we don't have an active order being processed
-        // But for better UX, maybe just show empty state or redirect effect
-    }
 
     return (
         <div className="min-h-screen bg-background-light dark:bg-background-dark pb-12">
@@ -76,7 +73,7 @@ export default function Checkout() {
 
             <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-8">
 
-                {/* Left Col: Forms */}
+                {/* Left Col: Info & Payment Method */}
                 <div className="flex flex-col gap-6">
                     {/* Shipping Info */}
                     <div className="bg-white dark:bg-surface-dark p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-white/5">
@@ -100,6 +97,79 @@ export default function Checkout() {
                             </button>
                         </div>
                     </div>
+
+                    {/* Payment Method Selection */}
+                    <div className="bg-white dark:bg-surface-dark p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-white/5">
+                        <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                            <span className="material-symbols-outlined text-primary">payments</span>
+                            Método de Pago
+                        </h2>
+
+                        <div className="flex flex-col gap-3">
+                            {/* Mercado Pago Option */}
+                            <button
+                                onClick={() => setPaymentMethod('mercadopago')}
+                                className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all ${paymentMethod === 'mercadopago' ? 'border-primary bg-primary/5' : 'border-gray-100 dark:border-white/5 hover:border-gray-200'}`}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className="size-10 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center">
+                                        <span className="material-symbols-outlined text-blue-600">account_balance_wallet</span>
+                                    </div>
+                                    <div className="text-left">
+                                        <p className="font-bold text-slate-900 dark:text-white text-sm">Mercado Pago</p>
+                                        <p className="text-xs text-slate-500">Tarjetas, Débito o Saldo MP</p>
+                                    </div>
+                                </div>
+                                <div className={`size-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'mercadopago' ? 'border-primary' : 'border-gray-300'}`}>
+                                    {paymentMethod === 'mercadopago' && <div className="size-2.5 rounded-full bg-primary animate-scale-in"></div>}
+                                </div>
+                            </button>
+
+                            {/* Bank Transfer Option */}
+                            <button
+                                onClick={() => setPaymentMethod('bank_transfer')}
+                                className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all ${paymentMethod === 'bank_transfer' ? 'border-primary bg-primary/5' : 'border-gray-100 dark:border-white/5 hover:border-gray-200'}`}
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className="size-10 bg-emerald-50 dark:bg-emerald-900/20 rounded-full flex items-center justify-center">
+                                        <span className="material-symbols-outlined text-emerald-600">account_balance</span>
+                                    </div>
+                                    <div className="text-left">
+                                        <p className="font-bold text-slate-900 dark:text-white text-sm">Transferencia / Alias</p>
+                                        <p className="text-xs text-slate-500">Paga desde tu app bancaria</p>
+                                    </div>
+                                </div>
+                                <div className={`size-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'bank_transfer' ? 'border-primary' : 'border-gray-300'}`}>
+                                    {paymentMethod === 'bank_transfer' && <div className="size-2.5 rounded-full bg-primary animate-scale-in"></div>}
+                                </div>
+                            </button>
+
+                            {/* Bank Transfer Instructions (Conditional) */}
+                            {paymentMethod === 'bank_transfer' && (
+                                <div className="mt-2 bg-emerald-50 dark:bg-emerald-900/10 p-4 rounded-xl border border-emerald-100 dark:border-emerald-900/30 animate-fade-in">
+                                    <p className="text-xs font-bold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider mb-2">Datos para Transferencia</p>
+                                    <div className="flex items-center justify-between bg-white dark:bg-black/20 p-3 rounded-lg border border-emerald-200 dark:border-emerald-800">
+                                        <div>
+                                            <p className="text-[10px] text-slate-500 uppercase font-bold">Alias Mercado Pago</p>
+                                            <p className="font-black text-slate-900 dark:text-white text-sm">farenheit.com.mp</p>
+                                        </div>
+                                        <button
+                                            onClick={() => {
+                                                navigator.clipboard.writeText('farenheit.com.mp');
+                                                alert("Alias copiado al portapapeles");
+                                            }}
+                                            className="p-2 hover:bg-slate-100 dark:hover:bg-white/10 rounded-lg transition-colors"
+                                        >
+                                            <span className="material-symbols-outlined text-primary">content_copy</span>
+                                        </button>
+                                    </div>
+                                    <p className="text-[11px] text-emerald-700 dark:text-emerald-500 mt-2 italic">
+                                        * Envía el comprobante por WhatsApp una vez realizado el pago, lo encontraras en <button onClick={() => document.getElementById('footer')?.scrollIntoView({ behavior: 'smooth' })} className="underline font-bold hover:text-primary transition-colors">Contactos</button>
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
 
                 {/* Right Col: Order Summary */}
@@ -110,7 +180,7 @@ export default function Checkout() {
                             {cartItems.map(item => (
                                 <div key={item.id} className="flex gap-4">
                                     <div className="size-16 bg-gray-100 rounded-lg bg-center bg-cover shrink-0" style={{ backgroundImage: `url(${item.image})` }}></div>
-                                    <div>
+                                    <div className="flex-1">
                                         <p className="font-bold text-slate-900 dark:text-white text-sm">{item.name}</p>
                                         <p className="text-xs text-slate-500 dark:text-gray-400">Cant: {item.quantity}</p>
                                         <p className="font-bold text-primary text-sm">${(item.price * item.quantity).toFixed(2)}</p>
@@ -138,7 +208,7 @@ export default function Checkout() {
                             <div className="h-px bg-gray-100 dark:bg-white/10 my-2"></div>
                             <div className="flex justify-between text-lg font-bold text-slate-900 dark:text-white">
                                 <span>Total</span>
-                                <span>${total.toFixed(2)}</span>
+                                <span className="text-2xl">${total.toFixed(2)}</span>
                             </div>
                         </div>
 
@@ -151,10 +221,32 @@ export default function Checkout() {
                                     disabled={isProcessing}
                                     className="w-full py-4 bg-primary hover:bg-emerald-600 text-white font-bold rounded-xl shadow-lg shadow-emerald-500/30 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                                 >
-                                    {isProcessing ? 'Procesando...' : 'Confirmar Datos y Pagar'}
+                                    {isProcessing ? (
+                                        <span className="size-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                                    ) : (
+                                        <>
+                                            <span className="material-symbols-outlined text-[20px]">lock</span>
+                                            {paymentMethod === 'mercadopago' ? 'Confirmar Datos y Pagar' : 'Confirmar Pedido'}
+                                        </>
+                                    )}
                                 </button>
                             ) : (
-                                <MercadoPagoCheckout orderId={orderId} total={total} items={cartItems} shippingCost={shippingCost} />
+                                paymentMethod === 'mercadopago' ? (
+                                    <MercadoPagoCheckout orderId={orderId} total={total} items={cartItems} shippingCost={shippingCost} />
+                                ) : (
+                                  <div className="animate-fade-in text-center p-4">
+                                      <p className="text-sm text-slate-500 mb-4">Pedido creado con éxito.</p>
+                                      <button
+                                          onClick={() => {
+                                              clearCart();
+                                              navigate('/success', { state: { orderId: orderId, paymentMethod: 'bank_transfer' } });
+                                          }}
+                                          className="w-full py-4 bg-emerald-600 text-white font-bold rounded-xl shadow-lg"
+                                      >
+                                          Ver Comprobante
+                                      </button>
+                                  </div>
+                                )
                             )}
                         </div>
                     </div>
